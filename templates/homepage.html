@@ -4,41 +4,63 @@
     <title>Cats!!!</title>
     <script src="https://use.fontawesome.com/7d51073c03.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/static/facts.js"></script>
   </head>
   <body>
     <style>
       body {
         font-family: 'Arial', sans-serif;
-        background-image: url("/static/spiration-light.png");
+        background-image: url("/static/img/spiration-light.png");
         background-position: center;
     }
       h1 {
       font-family: 'Julius Sans One', sans-serif;
       }
-      #cat-btn {
+      .cat-btn {
         background-color: #008CBA;
         font-family: 'Julius Sans One', sans-serif;
         border: none;
         color: white;
         padding: 15px 32px;
         text-align: center;
-        text-decoration: none;
         display: inline-block;
         font-size: 16px;
     }
     </style>
     <div>
-    <center></br></br></br><h1>Welcome to Cat Facts!</h1>
-        <i class="fa fa-paw" aria-hidden="true"></i></br></br>
-        Press the button to get started: </br></br>
-    <form action="/sms">
-    <input type="submit" id="cat-btn" value="Gimme cats!!">
-    </form>
-</center>
-</div>
+    <center></br></br></br><h1>Welcome to Cat Texts!</h1>
+      <i class="fa fa-paw" aria-hidden="true"></i></br></br>
+      Are you a cat person?</br>
+      Do you not get many texts?</br>
+      Have you ever wished your cat could...text you..?</br>
+      (Don't worry if you don't actually have a cat, this is an app, obviously)
+      </br></br>
 
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="/static/facts.js"></script>
+    <div id="yes-btn">
+      <input type="submit" id="yes-btn" class="cat-btn" value="YES"></br></br>
+    </div>
+
+    <div id="show-form" hidden>
+      <form action="/welcome">
+        Your cat's name:
+        <input type="text" name="cat-name" id="cat-name"
+               placeholder="Hellboy" required></br></br>
+        <input type="submit" id="cat-btn" class="cat-btn" value="Text me!">
+      </form>
+    </div>
+
+    </center>
+</div>
+    <script>
+    $('#yes-btn').on('click', function() {
+      $('#show-form').show()
+    })
+
+    $('#yes-btn').on('click', function() {
+      $('#yes-btn').hide()
+    })
+    </script>
 
 
   </body>
