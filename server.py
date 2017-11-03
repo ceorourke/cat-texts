@@ -13,33 +13,26 @@ phone_number = os.environ.get("phone_number")
 app = Flask(__name__)
 ############################################################################
 
+CAT_INFO = {}
+
 @app.route("/")
 def main():
     """Render main page"""
 
     return render_template("homepage.html")
 
-
 @app.route("/sms", methods=['POST'])
 def incoming_sms():
     """Send a dynamic reply to an incoming text message"""
     # Get the message the user sent our Twilio number
-
     body = request.values.get('Body', None)
-
-    # cat_facts = ["Cats use their tails for balance and have nearly 30 individual bones in them! \
-    #              <To cancel Daily Cat Facts, reply 'oh god'>",
-    #              "In ancient Egypt killing a cat was a crime punishable by death. Thanks for choosing Cat Facts!",
-    #              "Did you know there are about 100 distinct breeds of domestic cat? Plenty of furry love!",
-    #              "Welcome to Cat Facts! Did you know that the first cat show was held in 1871 at the Crystal Palace in London? Mee-wow!",
-    #              "Cats bury their feces to cover their trails from predators."]
     cat_facts = ['a', 'b', 'c']
     # Start our TwiML response
     resp = MessagingResponse()
 
     # Determine the right reply for this message
     if body == 'hello':
-        resp.message("Meeeow! Welcome to Cat Texts!")
+        resp.message('sdgsg')
     elif body == 'bye':
         resp.message("Goodnight meow!")
     else:
@@ -48,33 +41,28 @@ def incoming_sms():
 
     return str(resp)
 
-@app.route("/welcome", methods=['GET'])
-def get_info():
 
-    cat_name = request.args.get("cat-name")
-
-    return cat_name
-
-@app.route("/welcome2", methods=['POST'])
+@app.route("/welcome", methods=['GET', 'POST'])
 def welcome():
     """Welcome to the user to Cat Texts"""
 
-    # cat_name = request.args.get("cat-name")
-    # print type(cat_name)
-    # print cat_name, "stuff"
-    cat_name = get_info()
+    # CAT_INFO[cat_name] = request.args.get("cat-name")
+    cat_name = request.args.get("cat_name")
+    # CAT_INFO[snack] = request.args.get("cat-snack")
+    print cat_name
 
     message = client.messages.create(
     to=phone_number, 
     from_="+14138486585",
     media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-    # body="Thanks for signing up for Cat Texts! Reply 'hello' to say hi, 'bye' to say goodnight, and anything else to get a CAT TEXT!")
-    body=cat_name)
+    body="Hi it's " + cat_name + "!!!! Reply 'hello' to say hi, 'bye' to say goodnight, and anything else to get a random message from yours truly!")
 
     print(message.sid)
 
+    return render_template("homepage.html")
+
 if __name__ == "__main__":
-    # welcome()
+
     app.run(port=5000, host='0.0.0.0')
 
 
