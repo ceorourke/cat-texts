@@ -46,16 +46,19 @@ def incoming_sms():
 def welcome():
     """Welcome to the user to Cat Texts"""
 
+    test = request.args.get('cat-name')
+    print test 
+    # cat_name = request.values.get('cat_name')
+    # print cat_name
     # CAT_INFO[cat_name] = request.args.get("cat-name")
-    cat_name = request.args.get("cat_name")
-    print cat_name
     # CAT_INFO[snack] = request.args.get("cat-snack")
 
     message = client.messages.create(
     to=phone_number, 
     from_="+14138486585",
     media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-    body="Hi it's " + cat_name + "!!!! Reply 'hello' to say hi, 'bye' to say goodnight, and anything else to get a random message from yours truly!")
+    # body="Hi it's me!!!! Reply 'hello' to say hi, 'bye' to say goodnight, and anything else to get a random message from yours truly!")
+    body="Hi, it's " + test + ".")
 
     print(message.sid)
     return render_template("homepage.html")

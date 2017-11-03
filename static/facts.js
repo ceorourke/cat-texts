@@ -1,11 +1,5 @@
 "use strict";
 
-function getTexts(evt){
-    evt.preventDefault()
-    console.log("hi");
-    $.get('/welcome');
-}
-$('#cat-btn').on('click', getTexts);
 
 
 function getName(evt){
