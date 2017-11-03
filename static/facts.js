@@ -3,7 +3,7 @@
 function getTexts(evt){
     evt.preventDefault()
     console.log("hi");
-    $.post('/welcome');
+    $.get('/welcome');
 }
 $('#cat-btn').on('click', getTexts);
 

@@ -13,7 +13,7 @@ phone_number = os.environ.get("phone_number")
 app = Flask(__name__)
 ############################################################################
 
-CAT_INFO = {}
+# CAT_INFO = {}
 
 @app.route("/")
 def main():
@@ -48,8 +48,8 @@ def welcome():
 
     # CAT_INFO[cat_name] = request.args.get("cat-name")
     cat_name = request.args.get("cat_name")
-    # CAT_INFO[snack] = request.args.get("cat-snack")
     print cat_name
+    # CAT_INFO[snack] = request.args.get("cat-snack")
 
     message = client.messages.create(
     to=phone_number, 
@@ -58,7 +58,6 @@ def welcome():
     body="Hi it's " + cat_name + "!!!! Reply 'hello' to say hi, 'bye' to say goodnight, and anything else to get a random message from yours truly!")
 
     print(message.sid)
-
     return render_template("homepage.html")
 
 if __name__ == "__main__":
