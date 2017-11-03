@@ -13,7 +13,7 @@ phone_number = os.environ.get("phone_number")
 app = Flask(__name__)
 ############################################################################
 
-# CAT_INFO = {}
+CAT_INFO = {}
 
 @app.route("/")
 def main():
@@ -32,9 +32,9 @@ def incoming_sms():
 
     # Determine the right reply for this message
     if body == 'hello':
-        resp.message('sdgsg')
+        resp.message("Hi! Where's my " + CAT_INFO['cat_snack'] + "?!")
     elif body == 'bye':
-        resp.message("Goodnight meow!")
+        resp.message("goodbye")
     else:
         reply = random.choice(cat_facts)
         resp.message(reply)
@@ -46,19 +46,14 @@ def incoming_sms():
 def welcome():
     """Welcome to the user to Cat Texts"""
 
-    test = request.args.get('cat-name')
-    print test 
-    # cat_name = request.values.get('cat_name')
-    # print cat_name
-    # CAT_INFO[cat_name] = request.args.get("cat-name")
-    # CAT_INFO[snack] = request.args.get("cat-snack")
+    CAT_INFO['cat_name'] = request.args.get('cat-name')
+    CAT_INFO['cat_snack'] = request.args.get('cat-snack')
 
     message = client.messages.create(
     to=phone_number, 
     from_="+14138486585",
     media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-    # body="Hi it's me!!!! Reply 'hello' to say hi, 'bye' to say goodnight, and anything else to get a random message from yours truly!")
-    body="Hi, it's " + test + ".")
+    body="Hi, it's " + CAT_INFO['cat_name'] + ". I like " + CAT_INFO['cat_snack'] + "!")
 
     print(message.sid)
     return render_template("homepage.html")
