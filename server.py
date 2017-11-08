@@ -17,6 +17,8 @@ app = Flask(__name__)
 
 CAT_INFO = {}
 
+# CAT_INFO['dinner_time'] = "8:26"
+
 @app.route("/")
 def main():
     """Render main page"""
@@ -69,7 +71,9 @@ def welcome():
     body="Hi, it's " + CAT_INFO['cat_name'] + ". I like " + CAT_INFO['cat_snack'] + "! Feed me at " + CAT_INFO['dinner_time'])
 
     print(message.sid)
+
     return render_template("thanks.html")
+
 
 def daily_text():
 
@@ -77,23 +81,27 @@ def daily_text():
     to=phone_number, 
     from_="+14138486585",
     # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-    # body="Hi, " + CAT_INFO['cat_name'] + "here. I'm pretty sure it's dinner time!")
-    body = "hi I'm working")
+    body="Hi, " + CAT_INFO['cat_name'] + " here. I'm pretty sure it's dinner time!")
+    # body = "hi I'm working")
 
     print(message.sid)
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-#     app.run(port=5000, host='0.0.0.0')
+    app.run(port=5000, host='0.0.0.0')
 
+    # runs every day at dinner time
     # schedule.every().day.at(CAT_INFO['dinner_time']).do(daily_text)
-schedule.every(5).seconds.do(daily_text)
+    # just testing functionality, comment out above line
+    schedule.every(5).seconds.do(daily_text) 
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
-    
+    # having trouble here - I can only get the scheduled job to work if I put 
+    # app.run at the end, however the CAT_INFO dictionary has no info in it yet
+    # obviously, because the user hasn't entered it yet. 
 
 
 
