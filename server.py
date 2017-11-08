@@ -5,6 +5,8 @@ from twilio.rest import Client
 import os
 import schedule
 import time
+from datetime import datetime
+from pytz import timezone
 # Your Account SID from twilio.com/console
 account_sid = os.environ.get("account_sid")
 # Your Auth Token from twilio.com/console
@@ -17,7 +19,7 @@ app = Flask(__name__)
 
 CAT_INFO = {}
 
-# CAT_INFO['dinner_time'] = "8:26"
+CAT_INFO['dinner_time'] = "8:57"
 
 @app.route("/")
 def main():
@@ -86,22 +88,40 @@ def daily_text():
 
     print(message.sid)
 
-if __name__ == "__main__":
+@app.route("/thanks")
+def schedule_text():
+    """This is a really janky workaround that requires the page being open forever"""
 
-    app.run(port=5000, host='0.0.0.0')
-
-    # runs every day at dinner time
-    # schedule.every().day.at(CAT_INFO['dinner_time']).do(daily_text)
+    print "i'm here"
+    schedule.every().day.at(str(CAT_INFO['dinner_time'])).do(daily_text)
     # just testing functionality, comment out above line
-    schedule.every(5).seconds.do(daily_text) 
+    # schedule.every(5).seconds.do(daily_text) 
 
     while True:
         schedule.run_pending()
         time.sleep(1)
 
+    # return render_template("thanks.html")
+
+if __name__ == "__main__":
+
+    app.run(port=5000, host='0.0.0.0')
+
+    # runs every day at dinner time
+    # schedule.every().day.at(str(CAT_INFO['dinner_time'])).do(daily_text)
+    # # just testing functionality, comment out above line
+    # # schedule.every(5).seconds.do(daily_text) 
+
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)
+
     # having trouble here - I can only get the scheduled job to work if I put 
     # app.run at the end, however the CAT_INFO dictionary has no info in it yet
     # obviously, because the user hasn't entered it yet. 
 
-
+    # Current time in UTC
+    now_utc = datetime.now(timezone('UTC'))
+    # Convert to US/Pacific time zone
+    now_pacific = now_utc.astimezone(timezone('US/Pacific'))
 
