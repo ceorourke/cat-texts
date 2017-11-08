@@ -26,17 +26,23 @@ def incoming_sms():
     """Send a dynamic reply to an incoming text message"""
     # Get the message the user sent our Twilio number
     body = request.values.get('Body', None)
-    cat_facts = ['a', 'b', 'c']
+    toy1 = 'Can we play with my ' + CAT_INFO['cat_toy'] + '?'
+    toy2 = "I think it's time for the " + CAT_INFO['cat_toy2'] + "!!!"
+    snack = "I'm hungry!! I want " + CAT_INFO['cat_snack'] + "!"
+    activity1 = "Whachu up to? I'm busy " + CAT_INFO['cat_activity'] + "..."
+    activity2 = "Me? I'm just " + CAT_INFO['cat_activity2'] + "..."
+
+    cat_responses = [toy1, toy2, snack, activity1, activity2]
     # Start our TwiML response
     resp = MessagingResponse()
 
     # Determine the right reply for this message
-    if body == 'hello':
+    if body == 'hey' or body == 'Hey':
         resp.message("Hi! Where's my " + CAT_INFO['cat_snack'] + "?!")
-    elif body == 'bye':
-        resp.message("goodbye")
+    elif body == 'bye' or body == 'Bye':
+        resp.message("Bye? I'm just going to text you again later.")
     else:
-        reply = random.choice(cat_facts)
+        reply = random.choice(cat_responses)
         resp.message(reply)
 
     return str(resp)
@@ -48,6 +54,11 @@ def welcome():
 
     CAT_INFO['cat_name'] = request.args.get('cat-name')
     CAT_INFO['cat_snack'] = request.args.get('cat-snack')
+    CAT_INFO['cat_activity'] = request.args.get('cat-activity')
+    CAT_INFO['cat_activity2'] = request.args.get('cat-activity2')
+    CAT_INFO['cat_toy'] = request.args.get('cat-toy')
+    CAT_INFO['cat_toy2'] = request.args.get('cat-toy2')
+
 
     message = client.messages.create(
     to=phone_number, 
