@@ -3,6 +3,8 @@ from twilio.twiml.messaging_response import MessagingResponse
 import random
 from twilio.rest import Client
 import os
+import schedule
+import time
 # Your Account SID from twilio.com/console
 account_sid = os.environ.get("account_sid")
 # Your Auth Token from twilio.com/console
@@ -53,26 +55,45 @@ def welcome():
     """Welcome to the user to Cat Texts"""
 
     CAT_INFO['cat_name'] = request.args.get('cat-name')
+    CAT_INFO['dinner_time'] = request.args.get('dinner-time')
     CAT_INFO['cat_snack'] = request.args.get('cat-snack')
     CAT_INFO['cat_activity'] = request.args.get('cat-activity')
     CAT_INFO['cat_activity2'] = request.args.get('cat-activity2')
     CAT_INFO['cat_toy'] = request.args.get('cat-toy')
     CAT_INFO['cat_toy2'] = request.args.get('cat-toy2')
 
+    message = client.messages.create(
+    to=phone_number, 
+    from_="+14138486585",
+    # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
+    body="Hi, it's " + CAT_INFO['cat_name'] + ". I like " + CAT_INFO['cat_snack'] + "! Feed me at " + CAT_INFO['dinner_time'])
+
+    print(message.sid)
+    return render_template("thanks.html")
+
+def daily_text():
 
     message = client.messages.create(
     to=phone_number, 
     from_="+14138486585",
-    media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-    body="Hi, it's " + CAT_INFO['cat_name'] + ". I like " + CAT_INFO['cat_snack'] + "!")
+    # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
+    # body="Hi, " + CAT_INFO['cat_name'] + "here. I'm pretty sure it's dinner time!")
+    body = "hi I'm working")
 
     print(message.sid)
-    return render_template("homepage.html")
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    app.run(port=5000, host='0.0.0.0')
+#     app.run(port=5000, host='0.0.0.0')
 
+    # schedule.every().day.at(CAT_INFO['dinner_time']).do(daily_text)
+schedule.every(5).seconds.do(daily_text)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+
+    
 
 
 
