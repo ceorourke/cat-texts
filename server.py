@@ -58,6 +58,16 @@ def login():
         flash("Incorrect password.")
         return redirect('/')
 
+@app.route("/logout")
+def do_logout():
+    """Log user out."""
+
+    flash("Goodbye!")
+    session["user_id"] = ""
+
+    # TODO put this somewhere on the page!
+    return redirect("/")
+
 @app.route("/register", methods=["GET"])
 def register():
     """Show registration form"""
@@ -98,21 +108,39 @@ def incoming_sms():
     # Get the message the user sent our Twilio number
     body = request.values.get('Body', None)
 
-    name = Cat.query.filter_by()
+    current_user = session["user_id"]
+    name = db.session.query(Cat.name).filter(User.user_id==current_user).first()
 
-    toy1 = 'Can we play with my ' + CAT_INFO['cat_toy'] + '?'
-    toy2 = "I think it's time for the " + CAT_INFO['cat_toy2'] + "!!!"
-    snack = "I'm hungry!! I want " + CAT_INFO['cat_snack'] + "!"
-    activity1 = "Whachu up to? I'm busy " + CAT_INFO['cat_activity'] + "..."
-    activity2 = "Me? I'm just " + CAT_INFO['cat_activity2'] + "..."
+    # ratings = db.session.query(Rating.score).filter_by(user_id=user_id).all()
 
-    cat_responses = [toy1, toy2, snack, activity1, activity2]
+    toy1 = db.session.query(Cat.toy1).filter(User.user_id==current_user).first()
+    toy2 = db.session.query(Cat.toy2).filter(User.user_id==current_user).first()
+    snack = db.session.query(Cat.snack).filter(User.user_id==current_user).first()
+    activity1 = db.session.query(Cat.activity1).filter(User.user_id==current_user).first()
+    activity2 = db.session.query(Cat.activity2).filter(User.user_id==current_user).first()
+
+
+    # toy1 = 'Can we play with my ' + CAT_INFO['cat_toy'] + '?'
+    # toy2 = "I think it's time for the " + CAT_INFO['cat_toy2'] + "!!!"
+    # snack = "I'm hungry!! I want " + CAT_INFO['cat_snack'] + "!"
+    # activity1 = "Whachu up to? I'm busy " + CAT_INFO['cat_activity'] + "..."
+    # activity2 = "Me? I'm just " + CAT_INFO['cat_activity2'] + "..."
+
+    toy1_msg = 'Can we play with my ' + CAT_INFO['cat_toy'] + '?'
+    toy2_msg = "I think it's time for the " + CAT_INFO['cat_toy2'] + "!!!"
+    snack_msg = "I'm hungry!! I want " + CAT_INFO['cat_snack'] + "!"
+    activity1_msg = "Whachu up to? I'm busy " + CAT_INFO['cat_activity'] + "..."
+    activity2_msg = "Me? I'm just " + CAT_INFO['cat_activity2'] + "..."
+
+    cat_responses = [toy1_msg, toy2_msg, snack_msg, activity1_msg, activity2_msg]
     # Start our TwiML response
     resp = MessagingResponse()
 
     # Determine the right reply for this message
     if body == 'hey' or body == 'Hey':
-        resp.message("Hi! Where's my " + CAT_INFO['cat_snack'] + "?!")
+        # resp.message("Hi! Where's my " + CAT_INFO['cat_snack'] + "?!")
+        resp.message("Hi! Where's my " + snack + "?!")
+
     elif body == 'bye' or body == 'Bye':
         resp.message("Bye? I'm just going to text you again later.")
     else:
@@ -140,9 +168,10 @@ def welcome():
     toy1 = request.args.get('cat-toy')
     # CAT_INFO['cat_toy2'] = request.args.get('cat-toy2')
     toy2 = request.args.get('cat-toy2')
+    current_user = session["user_id"]
 
-    new_cat = Cat(name=name, dinner_time=dinner_time, snack=snack,
-                  activity1=activity1, activity2=activity2, 
+    new_cat = Cat(name=name, user_id=current_user, dinner_time=dinner_time, 
+                  snack=snack, activity1=activity1, activity2=activity2, 
                   toy1=toy1, toy2=toy2)
 
     db.session.add(new_cat)

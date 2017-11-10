@@ -30,8 +30,6 @@ class Cat(db.Model):
 
     cat_id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False) # foreign key to users
-    username = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
     name = db.Column(db.String(20), nullable=False)
     dinner_time = db.Column(db.String(5), nullable=False)
     snack = db.Column(db.String(20), nullable=False)
@@ -39,7 +37,7 @@ class Cat(db.Model):
     activity2 = db.Column(db.String(20), nullable=False)
     toy1 = db.Column(db.String(20), nullable=False)
     toy2 = db.Column(db.String(20), nullable=False)
-    phone_number = db.Column(db.String(10), nullable=False)
+    # phone_number = db.Column(db.String(10), nullable=False)
     # phone number won't be used until I launch app and purchase Twilio plan, 
     # but I guess I could store my own number instead of sourcing from environ
     # to get it started
