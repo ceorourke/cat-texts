@@ -1,4 +1,4 @@
-"""Models and database functions for pettextsdb."""
+"""Models and database functions for cattexts."""
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -74,20 +74,3 @@ if __name__ == "__main__":
     print "Connected to DB."
 
     db.create_all()
-
-# def init_app():
-
-#     from flask import Flask
-#     app = Flask(__name__)
-
-#     connect_to_db(app)
-#     print "Connected to DB"
-
-# def connect_to_db(app):
-#     """Connect the database to our Flask app."""
-
-#     # Configure to use our PostgreSQL database
-#     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cattexts'
-#     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#     db.app = app
-#     db.init_app(app)

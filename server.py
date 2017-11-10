@@ -88,6 +88,8 @@ def register_process():
         #check if the email is in use
         new_user = User(email=email, password=password)
 
+        # TODO hash password
+
         db.session.add(new_user)
         db.session.commit()
 
@@ -105,34 +107,32 @@ def register_process():
 @app.route("/sms", methods=['POST'])
 def incoming_sms():
     """Send a dynamic reply to an incoming text message"""
-    # Get the message the user sent our Twilio number
-    body = request.values.get('Body', None)
 
-    current_user = session["user_id"]
-    name = db.session.query(Cat.name).filter(User.user_id==current_user).first()
+    # user_id = session["user_id"]
+    user_id = 1
+    name = str(db.session.query(Cat.name).filter(User.user_id==user_id).first())
+    toy1 = str(db.session.query(Cat.toy1).filter(User.user_id==user_id).first())
+    toy2 = str(db.session.query(Cat.toy2).filter(User.user_id==user_id).first())
+    snack = db.session.query(Cat.snack).filter(User.user_id==user_id).first()
+    activity1 = str(db.session.query(Cat.activity1).filter(User.user_id==user_id).first())
+    activity2 = str(db.session.query(Cat.activity2).filter(User.user_id==user_id).first())
 
-    # ratings = db.session.query(Rating.score).filter_by(user_id=user_id).all()
+    print type(snack)
+    snack = str(snack)
+    print type(snack)
+    snack = snack.encode('utf-8')
+    # TODO trying to get this to not be in unicode!!
 
-    toy1 = db.session.query(Cat.toy1).filter(User.user_id==current_user).first()
-    toy2 = db.session.query(Cat.toy2).filter(User.user_id==current_user).first()
-    snack = db.session.query(Cat.snack).filter(User.user_id==current_user).first()
-    activity1 = db.session.query(Cat.activity1).filter(User.user_id==current_user).first()
-    activity2 = db.session.query(Cat.activity2).filter(User.user_id==current_user).first()
-
-
-    # toy1 = 'Can we play with my ' + CAT_INFO['cat_toy'] + '?'
-    # toy2 = "I think it's time for the " + CAT_INFO['cat_toy2'] + "!!!"
-    # snack = "I'm hungry!! I want " + CAT_INFO['cat_snack'] + "!"
-    # activity1 = "Whachu up to? I'm busy " + CAT_INFO['cat_activity'] + "..."
-    # activity2 = "Me? I'm just " + CAT_INFO['cat_activity2'] + "..."
-
-    toy1_msg = 'Can we play with my ' + CAT_INFO['cat_toy'] + '?'
-    toy2_msg = "I think it's time for the " + CAT_INFO['cat_toy2'] + "!!!"
-    snack_msg = "I'm hungry!! I want " + CAT_INFO['cat_snack'] + "!"
-    activity1_msg = "Whachu up to? I'm busy " + CAT_INFO['cat_activity'] + "..."
-    activity2_msg = "Me? I'm just " + CAT_INFO['cat_activity2'] + "..."
+    toy1_msg = 'Can we play with my ' + toy1 + '?'
+    toy2_msg = "I think it's time for the " + toy2 + "!!!"
+    snack_msg = "I'm hungry!! I want " + snack + "!"
+    activity1_msg = "Whachu up to? I'm busy " + activity1 + "..."
+    activity2_msg = "Me? I'm just " + activity2 + "..."
 
     cat_responses = [toy1_msg, toy2_msg, snack_msg, activity1_msg, activity2_msg]
+
+    # Get the message the user sent our Twilio number
+    body = request.values.get('Body', None)
     # Start our TwiML response
     resp = MessagingResponse()
 
@@ -154,19 +154,14 @@ def incoming_sms():
 def welcome():
     """Welcome to the user to Cat Texts"""
 
-    # CAT_INFO['cat_name'] = request.args.get('cat-name')
+    # TODO maybe move this all to registration? probably better UX
+
     name = request.args.get('cat-name')
-    # CAT_INFO['dinner_time'] = request.args.get('dinner-time')
     dinner_time = request.args.get('dinner-time')
-    # CAT_INFO['cat_snack'] = request.args.get('cat-snack')
     snack = request.args.get('cat-snack')
-    # CAT_INFO['cat_activity'] = request.args.get('cat-activity')
     activity1 = request.args.get('cat-activity')
-    # CAT_INFO['cat_activity2'] = request.args.get('cat-activity2')
     activity2 = request.args.get('cat-activity2')
-    # CAT_INFO['cat_toy'] = request.args.get('cat-toy')
     toy1 = request.args.get('cat-toy')
-    # CAT_INFO['cat_toy2'] = request.args.get('cat-toy2')
     toy2 = request.args.get('cat-toy2')
     current_user = session["user_id"]
 
@@ -199,20 +194,6 @@ def daily_text():
 
     print(message.sid)
 
-# @app.route("/thanks")
-# def schedule_text():
-#     """This is a really janky workaround that requires the page being open forever"""
-
-#     print "i'm here"
-#     schedule.every().day.at(str(CAT_INFO['dinner_time'])).do(daily_text)
-    # just testing functionality, comment out above line
-    # schedule.every(5).seconds.do(daily_text) 
-
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
-
-    # return render_template("thanks.html")
 
 if __name__ == "__main__":
 
