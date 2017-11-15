@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from twilio.twiml.messaging_response import MessagingResponse
+from jinja2 import StrictUndefined
 import random
 from twilio.rest import Client
 import os
