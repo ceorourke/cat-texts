@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://use.fontawesome.com/7d51073c03.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="/static/facts.js"></script>
+
+    <title>{% block title %}TITLE HERE{% endblock %}</title>
+
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-image: url("/static/img/spiration-light.png");
+        background-position: center;
+    }
+      h1 {
+      font-family: 'Julius Sans One', sans-serif;
+      }
+      .cat-btn {
+        background-color: #008CBA;
+        font-family: 'Julius Sans One', sans-serif;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        display: inline-block;
+        font-size: 16px;
+    }
+    </style>
+  </head>
+  <body>
+    {% block content %} CONTENT HERE {% endblock %}
+  </body>
+</html>
