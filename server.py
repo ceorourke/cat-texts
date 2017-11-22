@@ -19,23 +19,17 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 ############################################################################
 
-@app.before_request
-def before_everything():
-    session.modified = True
-    print session
-
-
 @app.route("/")
 def main():
     """Render main page"""
 
     return render_template("home.html")
 
-@app.route("/login", methods=["GET"])
-def attempt_login():
-    """Show login page"""
+# @app.route("/login", methods=["GET"])
+# def attempt_login():
+#     """Show login page"""
 
-    return render_template("home.html")
+#     return render_template("home.html")
 
 
 @app.route("/login", methods=["POST"])
@@ -84,6 +78,9 @@ def register_process():
     email = request.form.get("email")
     password = request.form.get("password")
     phone = request.form.get("phone")
+    country_code = '+1'
+    phone = ''.join(num for num in phone if num not in '-')
+    phone = country_code + phone
 
     existing_email = User.query.filter_by(email=email).first()
 
