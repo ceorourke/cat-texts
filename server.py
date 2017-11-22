@@ -25,12 +25,6 @@ def main():
 
     return render_template("home.html")
 
-# @app.route("/login", methods=["GET"])
-# def attempt_login():
-#     """Show login page"""
-
-#     return render_template("home.html")
-
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -46,7 +40,7 @@ def login():
         session["user_id"] = existing_email.user_id
 
         flash("Successfully logged in!")
-        return render_template("homepage.html")
+        return render_template("main.html")
 
     elif existing_email is None:
         flash("Incorrect email.")
@@ -71,7 +65,7 @@ def register():
 
     return render_template("register.html")
 
-@app.route("/register", methods=["POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register_process():
     """Get information from registration form."""
 
@@ -82,28 +76,55 @@ def register_process():
     phone = ''.join(num for num in phone if num not in '-')
     phone = country_code + phone
 
+    name = request.form.get('cat-name')
+    print name # name seems correct
+    dinner_time = request.form.get('dinner-time')
+    print dinner_time # time seems correct
+    snack = request.form.get('cat-snack')
+    print snack #snack seems correct
+    activity1 = request.form.get('cat-activity')
+    print activity1 # activity 1 is sleeping
+    activity2 = request.form.get('cat-activity2')
+    print activity1 # activitty 2 is ALSO sleeping
+    toy1 = request.form.get('cat-toy')
+    print toy1 # toy1 is "None"
+    toy2 = request.form.get('cat-toy2')
+    print toy2 #toy2 seems correct
+    current_user = session["user_id"]
+    print current_user # user id seems correct
+
     existing_email = User.query.filter_by(email=email).first()
 
-    print "existing email", existing_email
-
-    # check if the username is in use
+    # check if the email is in use
     if existing_email is None:
-        #check if the email is in use
-        print "made new user"
         new_user = User(email=email, password=password, phone_number=phone)
-
         # TODO hash password
-
         db.session.add(new_user)
         db.session.commit()
 
+        new_cat = Cat(user_id=current_user, name=name, dinner_time=dinner_time, 
+                  snack=snack, activity1=activity1, activity2=activity2, 
+                  toy1=toy1, toy2=toy2)
+        db.session.add(new_cat)
+        db.session.commit()
+
+        message = client.messages.create(
+        to=phone_number, 
+        from_="+14138486585",
+        # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
+        body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
+
+        print(message.sid)
+
+
         flash("Successfully registered " + email + "!")
-        return redirect("/")
+        return render_template("thanks.html")
 
     else:
-        flash("Username or email already in use")
+        flash("Email already in use")
         # TODO probably handle this in AJAX on the form and be more specific
         # as to whether it was the username or email that failed
+
 
     return redirect("/")
 
@@ -156,37 +177,37 @@ def incoming_sms():
     return str(resp)
 
 
-@app.route("/welcome", methods=['GET', 'POST'])
-def welcome():
-    """Welcome to the user to Cat Texts"""
+# @app.route("/welcome", methods=['GET', 'POST'])
+# def welcome():
+#     """Welcome to the user to Cat Texts"""
 
-    # TODO maybe move this all to registration? probably better UX
+#     # TODO maybe move this all to registration? probably better UX
 
-    name = request.args.get('cat-name')
-    dinner_time = request.args.get('dinner-time')
-    snack = request.args.get('cat-snack')
-    activity1 = request.args.get('cat-activity')
-    activity2 = request.args.get('cat-activity2')
-    toy1 = request.args.get('cat-toy')
-    toy2 = request.args.get('cat-toy2')
-    current_user = session["user_id"]
+#     name = request.args.get('cat-name')
+#     dinner_time = request.args.get('dinner-time')
+#     snack = request.args.get('cat-snack')
+#     activity1 = request.args.get('cat-activity')
+#     activity2 = request.args.get('cat-activity2')
+#     toy1 = request.args.get('cat-toy')
+#     toy2 = request.args.get('cat-toy2')
+#     current_user = session["user_id"]
 
-    new_cat = Cat(name=name, user_id=current_user, dinner_time=dinner_time, 
-                  snack=snack, activity1=activity1, activity2=activity2, 
-                  toy1=toy1, toy2=toy2)
+#     new_cat = Cat(name=name, user_id=current_user, dinner_time=dinner_time, 
+#                   snack=snack, activity1=activity1, activity2=activity2, 
+#                   toy1=toy1, toy2=toy2)
 
-    db.session.add(new_cat)
-    db.session.commit()
+#     db.session.add(new_cat)
+#     db.session.commit()
 
-    message = client.messages.create(
-    to=phone_number, 
-    from_="+14138486585",
-    # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-    body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
+#     message = client.messages.create(
+#     to=phone_number, 
+#     from_="+14138486585",
+#     # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
+#     body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
 
-    print(message.sid)
+#     print(message.sid)
 
-    return render_template("thanks.html")
+#     return render_template("thanks.html")
 
 
 def daily_text():
