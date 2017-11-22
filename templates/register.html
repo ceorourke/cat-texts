@@ -9,15 +9,15 @@
       <i class="fa fa-paw" aria-hidden="true"></i></br></br>
 
     <form action="/register" method="POST">
-      Your phone number:
-      <input type="text" name="phone" id="phone" 
-           placeholder="+14133293187" required>
+      Your phone number (i.e. 415-444-1234):
+      <input type="text" name="phone" id="phone" pattern="^\d{3}-\d{3}-\d{4}$"
+           placeholder="415-867-5309" required> </br></br>
       Your email:
       <input type="email" name="email" id="email" 
-           placeholder="Enter email" required>
+           placeholder="cool@cats.com" required> </br></br>
       Make a password:
       <input type="password" name="password" id="password" 
-           placeholder="Enter password" required>
+           placeholder="******" required> </br></br>
         
       <input type="submit" id="cat-btn" class="cat-btn" value="Text me!">
     </form>

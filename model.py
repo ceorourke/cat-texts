@@ -38,10 +38,6 @@ class Cat(db.Model):
     activity2 = db.Column(db.String(20), nullable=False)
     toy1 = db.Column(db.String(20), nullable=False)
     toy2 = db.Column(db.String(20), nullable=False)
-    # phone_number = db.Column(db.String(10), nullable=False)
-    # phone number won't be used until I launch app and purchase Twilio plan, 
-    # but I guess I could store my own number instead of sourcing from environ
-    # to get it started
 
     user = db.relationship("User", backref=db.backref("cats"))
 
