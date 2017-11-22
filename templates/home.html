@@ -4,13 +4,15 @@
 
 {% block content %}
 
-  <h3>Login or <a href="/register">Register</a></h3><br/>
+<center>
+</br></br></br></br></br></br>
+  <h1>Login or <a href="/register">Register</a></h1><br/>
     <div id="login">
       <form action="/login" method="POST">
         <span> Email: <br/><input type="email" name="email"></span></br>
         <span>Password: <br/><input type="password" name="password"></span></br><br/>
-        <input type="submit" value="Login">
+        <input type="submit" id="cat-btn" class="cat-btn" value="Login">
       </form>
     </div>
-<!-- <script src="/static/facts.js"></script>
- -->{% endblock %}
+</center>
+{% endblock %}
