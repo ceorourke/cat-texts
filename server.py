@@ -19,9 +19,11 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 ############################################################################
 
-# CAT_INFO = {}
+@app.before_request
+def before_everything():
+    session.modified = True
+    print session
 
-# CAT_INFO['dinner_time'] = "8:57"
 
 @app.route("/")
 def main():
@@ -81,13 +83,17 @@ def register_process():
 
     email = request.form.get("email")
     password = request.form.get("password")
+    phone = request.form.get("phone")
 
     existing_email = User.query.filter_by(email=email).first()
+
+    print "existing email", existing_email
 
     # check if the username is in use
     if existing_email is None:
         #check if the email is in use
-        new_user = User(email=email, password=password)
+        print "made new user"
+        new_user = User(email=email, password=password, phone_number=phone)
 
         # TODO hash password
 
@@ -109,20 +115,23 @@ def register_process():
 def incoming_sms():
     """Send a dynamic reply to an incoming text message"""
 
-    # user_id = session["user_id"]
-    user_id = 1
-    name = str(db.session.query(Cat.name).filter(User.user_id==user_id).first())
-    toy1 = str(db.session.query(Cat.toy1).filter(User.user_id==user_id).first())
-    toy2 = str(db.session.query(Cat.toy2).filter(User.user_id==user_id).first())
-    snack = db.session.query(Cat.snack).filter(User.user_id==user_id).first()
-    activity1 = str(db.session.query(Cat.activity1).filter(User.user_id==user_id).first())
-    activity2 = str(db.session.query(Cat.activity2).filter(User.user_id==user_id).first())
+    phone = request.values.get('From', None)
+    user_id = User.query.filter_by(phone_number=phone).first()
+    user_id = user_id.user_id
 
-    print type(snack)
-    snack = str(snack)
-    print type(snack)
-    snack = snack.encode('utf-8')
-    # TODO trying to get this to not be in unicode!!
+    name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
+    toy1 = db.session.query(Cat.toy1).filter(User.user_id==user_id).first()
+    toy2 = db.session.query(Cat.toy2).filter(User.user_id==user_id).first()
+    snack = db.session.query(Cat.snack).filter(User.user_id==user_id).first()
+    activity1 = db.session.query(Cat.activity1).filter(User.user_id==user_id).first()
+    activity2 = db.session.query(Cat.activity2).filter(User.user_id==user_id).first()
+
+    name = str(name[0])
+    toy1 = str(toy1[0])
+    toy2 = str(toy2[0])
+    snack = str(snack[0])
+    activity1 = str(activity1[0])
+    activity2 = str(activity2[0])
 
     toy1_msg = 'Can we play with my ' + toy1 + '?'
     toy2_msg = "I think it's time for the " + toy2 + "!!!"
@@ -139,7 +148,6 @@ def incoming_sms():
 
     # Determine the right reply for this message
     if body == 'hey' or body == 'Hey':
-        # resp.message("Hi! Where's my " + CAT_INFO['cat_snack'] + "?!")
         resp.message("Hi! Where's my " + snack + "?!")
 
     elif body == 'bye' or body == 'Bye':
