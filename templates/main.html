@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Cats!{% endblock %}
+{% block title %} {{ name }}!{% endblock %}
 
 {% block content %}
 
@@ -10,23 +10,24 @@
 
     <div style="display: inline-block; text-align: left;">
 
-    Here is your cat's current info: </br></br>
+      Here is your cat's current info: </br></br>
 
-    <b>Name:</b> {{ name }} </br>
-    <b>Dinner Time:</b> {{ dinner_time }} </br>
-    <b>Favorite toy:</b> {{ toy1 }} </br>
-    <b>2nd Favorite toy:</b> {{ toy2 }} </br>
-    <b>Favorite Snack:</b> {{ snack }} </br>
-    <b>Favorite Activity: </b> {{ activity1 }} </br>
-    <b>2nd Favorite Activity: </b> {{ activity2 }} </br></br></br>
-  </div>
-
-      <form action="/logout" method="GET">
-    <input type="submit" id="cat-btn" class="cat-btn" value="Logout!">
-  </form> </br>
+      <b>Name:</b> {{ name }} </br>
+      <b>Dinner Time: </b> {{ dinner_time }} </br>
+      <b>Favorite toy: </b> {{ toy1 }} </br>
+      <b>2nd Favorite toy: </b> {{ toy2 }} </br>
+      <b>Favorite Snack: </b> {{ snack }} </br>
+      <b>Favorite Activity: </b> {{ activity1 }} </br>
+      <b>2nd Favorite Activity: </b> {{ activity2 }} </br></br></br>
+    </div>
 
     <form action="/update" method="GET">
-    <input type="submit" id="cat-btn" class="cat-btn" value="Update Info!">
-  </form>
+      <input type="submit" id="cat-btn" class="cat-btn" value="Update Cat Info!">
+    </form> </br>
+
+    <form action="/logout" method="GET">
+      <input type="submit" id="cat-btn" class="cat-btn" value="Logout!">
+    </form>
+
 </div>  
 {% endblock %}
