@@ -6,6 +6,7 @@ from twilio.rest import Client
 import os
 import schedule
 import time
+from sqlalchemy import update
 from datetime import datetime
 from pytz import timezone
 from model import connect_to_db, db, User, Cat
@@ -77,7 +78,6 @@ def do_logout():
     flash("Goodbye!")
     session["user_id"] = ""
 
-    # TODO put this somewhere on the page!
     return redirect("/")
 
 @app.route("/register", methods=["GET"])
@@ -140,24 +140,72 @@ def register_process():
 
     return redirect("/")
 
-# @app.route("/main")
-# def main_page():
-#     """Show main page after registered user logged in"""
+@app.route("/update")
+def show_update():
+    """Show update page"""
 
-#     user_id = user_id.user_id
+    return render_template("update.html")
 
-#     name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
-#     toy1 = db.session.query(Cat.toy1).filter(User.user_id==user_id).first()
-#     toy2 = db.session.query(Cat.toy2).filter(User.user_id==user_id).first()
-#     snack = db.session.query(Cat.snack).filter(User.user_id==user_id).first()
-#     activity1 = db.session.query(Cat.activity1).filter(User.user_id==user_id).first()
-#     activity2 = db.session.query(Cat.activity2).filter(User.user_id==user_id).first()
+@app.route("/update", methods=['POST'])
+def do_update():
+    """Update details in db"""
 
+    current_user = session["user_id"]
+    cat = db.session.query(Cat).filter(User.user_id==current_user).first()
 
-#     return render_template("main.html", name=name, toy1=toy1, toy2=toy2,
-#                                         snack=snack, activity1=activity1,
-#                                         activity2=activity2)
+    name = request.form.get('cat-name')
+    dinner_time = request.form.get('dinner-time')
+    snack = request.form.get('cat-snack')
+    activity1 = request.form.get('cat-activity')
+    activity2 = request.form.get('cat-activity2')
+    toy1 = request.form.get('cat-toy')
+    toy2 = request.form.get('cat-toy2')
 
+    if name:
+        cat.name = name
+    else: 
+        name = db.session.query(Cat.name).filter(User.user_id==current_user).first()
+        name = str(name[0])
+    if dinner_time:
+        cat.dinner_time = dinner_time
+    else:
+        dinner_time = db.session.query(Cat.dinner_time).filter(User.user_id==current_user).first()
+        dinner_time = str(dinner_time[0])
+    if toy1:
+        cat.toy1 = toy1
+    else:
+        toy1 = db.session.query(Cat.toy1).filter(User.user_id==current_user).first()
+        toy1 = str(toy1[0])
+    if toy2:
+        cat.toy2 = toy2
+    else:
+        toy2 = db.session.query(Cat.toy2).filter(User.user_id==current_user).first()
+        toy2 = str(toy2[0])
+    if snack:
+        cat.snack = snack
+    else:
+        snack = db.session.query(Cat.snack).filter(User.user_id==current_user).first()
+        snack = str(snack[0])
+    if activity1:
+        cat.activity1 = activity1
+    else:
+        activity1 = db.session.query(Cat.activity1).filter(User.user_id==current_user).first()
+        activity1 = str(activity1[0])
+    if activity2:
+        cat.activity2 = activity2
+    else:
+        activity2 = db.session.query(Cat.activity2).filter(User.user_id==current_user).first()
+        activity2 = str(activity2[0])
+
+    db.session.commit()
+    if name:
+        flash("Successfully updated " + name + "'s info!")
+    else:
+        flash("Successfully updated " + cat.name + "'s info!")
+
+    return render_template("main.html", name=name, toy1=toy1, toy2=toy2,
+                                        snack=snack, activity1=activity1,
+                                        activity2=activity2, dinner_time=dinner_time)
 
 
 @app.route("/sms", methods=['POST'])
@@ -206,39 +254,6 @@ def incoming_sms():
         resp.message(reply)
 
     return str(resp)
-
-
-# @app.route("/welcome", methods=['GET', 'POST'])
-# def welcome():
-#     """Welcome to the user to Cat Texts"""
-
-#     # TODO maybe move this all to registration? probably better UX
-
-#     name = request.args.get('cat-name')
-#     dinner_time = request.args.get('dinner-time')
-#     snack = request.args.get('cat-snack')
-#     activity1 = request.args.get('cat-activity')
-#     activity2 = request.args.get('cat-activity2')
-#     toy1 = request.args.get('cat-toy')
-#     toy2 = request.args.get('cat-toy2')
-#     current_user = session["user_id"]
-
-#     new_cat = Cat(name=name, user_id=current_user, dinner_time=dinner_time, 
-#                   snack=snack, activity1=activity1, activity2=activity2, 
-#                   toy1=toy1, toy2=toy2)
-
-#     db.session.add(new_cat)
-#     db.session.commit()
-
-#     message = client.messages.create(
-#     to=phone_number, 
-#     from_="+14138486585",
-#     # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-#     body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
-
-#     print(message.sid)
-
-#     return render_template("thanks.html")
 
 
 def daily_text():
