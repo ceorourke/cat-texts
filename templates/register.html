@@ -4,49 +4,52 @@
 
 {% block content %}
 
-    <div>
-    <center></br></br></br><h1>Register for Cat Texts!</h1>
-      <i class="fa fa-paw" aria-hidden="true"></i></br></br>
+  <div style="text-align: center;">
+  </br></br></br><h1>Register for Cat Texts!</h1>
+  <i class="fa fa-paw" aria-hidden="true"></i></br></br>
 
-    <form action="/register" method="POST">
-      Your phone number (i.e. 415-444-1234):
-      <input type="text" name="phone" id="phone" pattern="^\d{3}-\d{3}-\d{4}$"
-           placeholder="415-867-5309" required> </br></br>
-      Your email:
-      <input type="email" name="email" id="email" 
-           placeholder="cool@cats.com" required> </br></br>
-      Make a password:
-      <input type="password" name="password" id="password" 
-           placeholder="******" required> </br></br>
-      Your cat's name:
-      <input type="text" name="cat-name" id="cat-name"
-             placeholder="Hellboy" required></br></br>
-      Your cat's dinner time:
-      <input type="text" name="dinner-time" id="dinner-time"
-             placeholder="7:00" required></br></br>
-<!--         <select> name="dinner-time">
-        <option value="5">5:00 pm</option>
-        <option value="6">6:00 pm</option>
-        <option value="7">7:00 pm</option>
-      </select></br></br> -->
-      Your cat's favorite snack:
-      <input type="text" name="cat-snack" id="cat-snack"
-             placeholder="Tuna" required></br></br>
-      Your cat's favorite activity:
-      <input type="text" name="cat-activity" id="cat-activity"
-             placeholder="Sleeping" required></br></br>
-      Your cat's 2nd favorite activity:
-      <input type="text" name="cat-activity2" id="cat-activity2"
-             placeholder="Meowing!!" required></br></br>
-      Your cat's favorite toy:
-      <input type="text" name="cat-toy" id="cat-toy"
-             placeholder="Space ball" required></br></br>
-      Your cat's 2nd favorite toy:
-      <input type="text" name="cat-toy2" id="cat-toy2"
-             placeholder="Catnip carrot" required></br></br>
-      <input type="submit" id="cat-btn" class="cat-btn" value="Text me!">
+    <div style="display: inline-block; text-align: left;">
 
-    </form>
-  </center>
+      <form action="/register" method="POST">
+        Your phone number: 
+        <input type="text" name="phone" id="phone" pattern="^\d{3}-\d{3}-\d{4}$"
+               placeholder="415-123-4567" required> </br>
+        (i.e. 415-123-4567)  </br></br>
+        Your email:
+        <input type="email" name="email" id="email" 
+             placeholder="cool@cats.com" required> </br></br>
+        Make a password:
+        <input type="password" name="password" id="password" 
+             placeholder="******" required> </br></br>
+        Your cat's name:
+        <input type="text" name="cat-name" id="cat-name"
+               placeholder="Hellboy" required></br></br>
+        Your cat's dinner time:
+        <input type="text" name="dinner-time" id="dinner-time"
+               placeholder="7:00" required></br></br>
+      <!--         <select> name="dinner-time">
+          <option value="5">5:00 pm</option>
+          <option value="6">6:00 pm</option>
+          <option value="7">7:00 pm</option>
+        </select></br></br> -->
+        Your cat's favorite snack:
+        <input type="text" name="cat-snack" id="cat-snack"
+               placeholder="Tuna" required></br></br>
+        Your cat's favorite activity:
+        <input type="text" name="cat-activity" id="cat-activity"
+               placeholder="Sleeping" required></br></br>
+        Your cat's 2nd favorite activity:
+        <input type="text" name="cat-activity2" id="cat-activity2"
+               placeholder="Meowing!!" required></br></br>
+        Your cat's favorite toy:
+        <input type="text" name="cat-toy" id="cat-toy"
+               placeholder="Space ball" required></br></br>
+        Your cat's 2nd favorite toy:
+        <input type="text" name="cat-toy2" id="cat-toy2"
+               placeholder="Catnip carrot" required></br></br>
     </div>
+    <center>
+    <input type="submit" id="cat-btn" class="cat-btn" value="Text me!">
+  </center>
+    </form>
 {% endblock %}
