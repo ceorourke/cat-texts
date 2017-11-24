@@ -3,17 +3,28 @@
 {% block title %}Cats!{% endblock %}
 
 {% block content %}
-    <div>
-    <center></br></br></br><h1>Cat Texts!</h1>
-      <i class="fa fa-paw" aria-hidden="true"></i></br></br>
 
-      THIS IS THE MAIN PAGE. I'M GOING TO SHOW INFO ABOUT YOU AND YOUR CAT
+<div style="text-align: center;">
+  </br></br></br><h1>Cat Texts!</h1>
+    <i class="fa fa-paw" aria-hidden="true"></i></br></br>
 
+    <div style="display: inline-block; text-align: left;">
 
-  </br></br>
+    Here is your cat's current info: </br></br>
 
+    <b>Name:</b> {{ name }} </br>
+    <b>Dinner Time:</b> {{ dinner_time }} </br>
+    <b>Favorite toy:</b> {{ toy1 }} </br>
+    <b>2nd Favorite toy:</b> {{ toy2 }} </br>
+    <b>Favorite Snack:</b> {{ snack }} </br>
+    <b>Favorite Activity: </b> {{ activity1 }} </br>
+    <b>2nd Favorite Activity: </b> {{ activity2 }} </br></br></br>
+  </div>
+
+    <form action="/update" method="GET">
+    <input type="submit" id="cat-btn" class="cat-btn" value="Update Info">
 
     <form action="/logout" method="GET">
     <input type="submit" id="cat-btn" class="cat-btn" value="Logout!">
-    </div>
+</div>  
 {% endblock %}

@@ -40,7 +40,28 @@ def login():
         session["user_id"] = existing_email.user_id
 
         flash("Successfully logged in!")
-        return render_template("main.html")
+
+        user_id = session["user_id"]
+
+        name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
+        toy1 = db.session.query(Cat.toy1).filter(User.user_id==user_id).first()
+        toy2 = db.session.query(Cat.toy2).filter(User.user_id==user_id).first()
+        snack = db.session.query(Cat.snack).filter(User.user_id==user_id).first()
+        activity1 = db.session.query(Cat.activity1).filter(User.user_id==user_id).first()
+        activity2 = db.session.query(Cat.activity2).filter(User.user_id==user_id).first()
+        dinner_time = db.session.query(Cat.dinner_time).filter(User.user_id==user_id).first()
+
+        name = str(name[0])
+        toy1 = str(toy1[0])
+        toy2 = str(toy2[0])
+        snack = str(snack[0])
+        activity1 = str(activity1[0])
+        activity2 = str(activity2[0])
+        dinner_time = str(dinner_time[0])
+
+        return render_template("main.html", name=name, toy1=toy1, toy2=toy2,
+                                            snack=snack, activity1=activity1,
+                                            activity2=activity2, dinner_time=dinner_time)
 
     elif existing_email is None:
         flash("Incorrect email.")
@@ -77,21 +98,13 @@ def register_process():
     phone = country_code + phone
 
     name = request.form.get('cat-name')
-    print name # name seems correct
     dinner_time = request.form.get('dinner-time')
-    print dinner_time # time seems correct
     snack = request.form.get('cat-snack')
-    print snack #snack seems correct
     activity1 = request.form.get('cat-activity')
-    print activity1 # activity 1 is sleeping
     activity2 = request.form.get('cat-activity2')
-    print activity1 # activitty 2 is ALSO sleeping
     toy1 = request.form.get('cat-toy')
-    print toy1 # toy1 is "None"
     toy2 = request.form.get('cat-toy2')
-    print toy2 #toy2 seems correct
     current_user = session["user_id"]
-    print current_user # user id seems correct
 
     existing_email = User.query.filter_by(email=email).first()
 
@@ -116,7 +129,6 @@ def register_process():
 
         print(message.sid)
 
-
         flash("Successfully registered " + email + "!")
         return render_template("thanks.html")
 
@@ -127,6 +139,25 @@ def register_process():
 
 
     return redirect("/")
+
+# @app.route("/main")
+# def main_page():
+#     """Show main page after registered user logged in"""
+
+#     user_id = user_id.user_id
+
+#     name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
+#     toy1 = db.session.query(Cat.toy1).filter(User.user_id==user_id).first()
+#     toy2 = db.session.query(Cat.toy2).filter(User.user_id==user_id).first()
+#     snack = db.session.query(Cat.snack).filter(User.user_id==user_id).first()
+#     activity1 = db.session.query(Cat.activity1).filter(User.user_id==user_id).first()
+#     activity2 = db.session.query(Cat.activity2).filter(User.user_id==user_id).first()
+
+
+#     return render_template("main.html", name=name, toy1=toy1, toy2=toy2,
+#                                         snack=snack, activity1=activity1,
+#                                         activity2=activity2)
+
 
 
 @app.route("/sms", methods=['POST'])
