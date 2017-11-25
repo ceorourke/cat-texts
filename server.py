@@ -1,15 +1,14 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from twilio.twiml.messaging_response import MessagingResponse
 from jinja2 import StrictUndefined
+from model import connect_to_db, db, User, Cat
 import random
 from twilio.rest import Client
 import os
 import schedule
 import time
-from sqlalchemy import update
 from datetime import datetime
 from pytz import timezone
-from model import connect_to_db, db, User, Cat
 # Your Account SID from twilio.com/console
 account_sid = os.environ.get("account_sid")
 # Your Auth Token from twilio.com/console
@@ -99,6 +98,7 @@ def register_process():
 
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
+    # TODO convert to UTC?
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
     activity2 = request.form.get('cat-activity2')
@@ -155,6 +155,7 @@ def do_update():
 
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
+    # TODO convert to UTC?
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
     activity2 = request.form.get('cat-activity2')
@@ -197,11 +198,8 @@ def do_update():
         activity2 = db.session.query(Cat.activity2).filter(User.user_id==current_user).first()
         activity2 = str(activity2[0])
 
-    db.session.commit()
-    if name:
-        flash("Successfully updated " + name + "'s info!")
-    else:
-        flash("Successfully updated " + cat.name + "'s info!")
+    db.session.commit
+    flash("Successfully updated " + cat.name + "'s info!")
 
     return render_template("main.html", name=name, toy1=toy1, toy2=toy2,
                                         snack=snack, activity1=activity1,
@@ -256,18 +254,6 @@ def incoming_sms():
     return str(resp)
 
 
-def daily_text():
-
-    message = client.messages.create(
-    to=phone_number, 
-    from_="+14138486585",
-    # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-    body="Hi, " + CAT_INFO['cat_name'] + " here. I'm pretty sure it's dinner time!")
-    # body = "hi I'm working")
-
-    print(message.sid)
-
-
 if __name__ == "__main__":
 
     from flask import Flask
@@ -280,21 +266,4 @@ if __name__ == "__main__":
 
     app.run(port=5000, host='0.0.0.0')
 
-    # runs every day at dinner time
-    # schedule.every().day.at(str(CAT_INFO['dinner_time'])).do(daily_text)
-    # # just testing functionality, comment out above line
-    # # schedule.every(5).seconds.do(daily_text) 
-
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
-
-    # having trouble here - I can only get the scheduled job to work if I put 
-    # app.run at the end, however the CAT_INFO dictionary has no info in it yet
-    # obviously, because the user hasn't entered it yet. 
-
-    # Current time in UTC
-    now_utc = datetime.now(timezone('UTC'))
-    # Convert to US/Pacific time zone
-    now_pacific = now_utc.astimezone(timezone('US/Pacific'))
 
