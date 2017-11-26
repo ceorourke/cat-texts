@@ -8,6 +8,7 @@ from model import connect_to_db, db, User, Cat
 
 from datetime import datetime
 from pytz import timezone
+import pytz
 
 # Your Account SID from twilio.com/console
 account_sid = os.environ.get("account_sid")
@@ -35,14 +36,35 @@ if __name__ == "__main__":
     user_id = User.query.filter_by(phone_number=phone_number).first()
     user_id = user_id.user_id
     dinner_time = db.session.query(Cat.dinner_time).filter(User.user_id==user_id).first()
-    dinner_time = str(dinner_time[0])
-    # TODO need to convert dinner_time to UTC
-    # dinner_time = "00:17"
-    print dinner_time
+
+    # currently just testing this, only works for 24 hour format time
+    # and only for 2 digit hours i.e. 19:00
+    # (needs to be input like above, will make more flexible later)
+    # hour = dinner_time[0:2]
+    # hour = int(hour)
+    # minutes = int(dinner_time[3:])
+    minutes = dinner_time[0].minute + 7
+    # this seems to be 7 minutes EARLY, so adding 7 minutes to make it correct
+    # note this is not flexible if it's 14:59 for example, just a hacky workaround for now
+    # put in 30
+    # got back 23
+
+    this_timezone = timezone('US/Pacific')
+    date = dinner_time[0].replace(minute=minutes, tzinfo=this_timezone) # needs a timezone to convert to UTC
+    # convert to UTC
+    utc = pytz.utc
+    date = date.astimezone(utc)
+
+    hour = date.hour
+    minute = date.minute
+
+    this_time = str(hour) + ":" + str(minute)
+    print this_time
     name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
     name = str(name[0])
     print name
-    schedule.every().day.at(dinner_time).do(daily_text)
+    schedule.every().day.at(this_time).do(daily_text)
+    # schedule.every().day.at("21:10").do(daily_text)
     # schedule.every(5).seconds.do(daily_text)
 
     while True:
@@ -50,8 +72,8 @@ if __name__ == "__main__":
         time.sleep(1)
 
 
-    # Current time in UTC
-    now_utc = datetime.now(timezone('UTC'))
-    # Convert to US/Pacific time zone
-    now_pacific = now_utc.astimezone(timezone('US/Pacific'))
+
+
+
+
 
