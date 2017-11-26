@@ -100,17 +100,20 @@ def register_process():
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
 
-    # TODO convert to UTC?
-    utc = pytz.utc
+    #TODO factor this out
+
     date = datetime.now()
     this_timezone = timezone('US/Pacific')
     # currently just testing this, only works for 24 hour format time
     # and only for 2 digit hours i.e. 19:00
+    # (needs to be input like above, will make more flexible later)
     hour = int(dinner_time[0:2])
     minutes = int(dinner_time[3:])
-    date = date.replace(hour=hour, minute=minutes, second=0, tzinfo=this_timezone)
+    # date = date.replace(hour=hour, minute=minutes, second=0, tzinfo=this_timezone)
+    date = date.replace(hour=hour, minute=minutes, second=0, tzinfo=None)
     # convert to UTC
-    date = date.astimezone(utc)
+    utc = pytz.utc
+    # date = date.astimezone(utc)
 
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
@@ -162,6 +165,8 @@ def show_update():
 @app.route("/update", methods=['POST'])
 def do_update():
     """Update details in db"""
+
+    #TODO this isn't actually updating in DB :(
 
     current_user = session["user_id"]
     cat = db.session.query(Cat).filter(User.user_id==current_user).first()
