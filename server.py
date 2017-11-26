@@ -9,6 +9,7 @@ import schedule
 import time
 from datetime import datetime
 from pytz import timezone
+import pytz
 # Your Account SID from twilio.com/console
 account_sid = os.environ.get("account_sid")
 # Your Auth Token from twilio.com/console
@@ -98,7 +99,19 @@ def register_process():
 
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
+
     # TODO convert to UTC?
+    utc = pytz.utc
+    date = datetime.now()
+    this_timezone = timezone('US/Pacific')
+    # currently just testing this, only works for 24 hour format time
+    # and only for 2 digit hours i.e. 19:00
+    hour = int(dinner_time[0:2])
+    minutes = int(dinner_time[3:])
+    date = date.replace(hour=hour, minute=minutes, second=0, tzinfo=this_timezone)
+    # convert to UTC
+    date = date.astimezone(utc)
+
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
     activity2 = request.form.get('cat-activity2')
@@ -115,7 +128,7 @@ def register_process():
         db.session.add(new_user)
         db.session.commit()
 
-        new_cat = Cat(user_id=current_user, name=name, dinner_time=dinner_time, 
+        new_cat = Cat(user_id=current_user, name=name, dinner_time=date, 
                   snack=snack, activity1=activity1, activity2=activity2, 
                   toy1=toy1, toy2=toy2)
         db.session.add(new_cat)

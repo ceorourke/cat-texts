@@ -32,7 +32,8 @@ class Cat(db.Model):
     cat_id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False) # foreign key to users
     name = db.Column(db.String(20), nullable=False)
-    dinner_time = db.Column(db.String(5), nullable=False)
+    # dinner_time = db.Column(db.String(5), nullable=False)
+    dinner_time = db.Column(db.DateTime, nullable=False)
     snack = db.Column(db.String(20), nullable=False)
     activity1 = db.Column(db.String(20), nullable=False)
     activity2 = db.Column(db.String(20), nullable=False)
