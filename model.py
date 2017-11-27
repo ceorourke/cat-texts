@@ -22,7 +22,7 @@ class User(db.Model):
         s = "<User user_id=%s username=%s password=%s>"
 
         # TODO probably remove password when not in development
-        return s % (self.user_id, self.username, self.password)
+        return s % (self.user_id, self.email, self.password)
 
 class Cat(db.Model):
     """Cat model"""
