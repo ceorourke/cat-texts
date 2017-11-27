@@ -5,8 +5,7 @@ from model import connect_to_db, db, User, Cat
 import random
 from twilio.rest import Client
 import os
-import schedule
-import time
+# import time
 from datetime import datetime
 from pytz import timezone
 import pytz
@@ -25,20 +24,6 @@ def main():
     """Render main page"""
 
     return render_template("home.html")
-
-@app.route("/main")
-def main_page():
-    """Render main page"""
-
-    user_id = session["user_id"]
-
-    cat = Cat.query.filter_by(user_id=user_id).first()
-
-    return render_template("main.html", name=cat.name, toy1=cat.toy1, 
-                                        toy2=cat.toy2, snack=cat.snack, 
-                                        activity1=cat.activity1,
-                                        activity2=cat.activity2, 
-                                        dinner_time=cat.dinner_time)
 
 
 @app.route("/login", methods=["POST"])
@@ -100,16 +85,28 @@ def register_process():
 
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
+    ampm = request.form.get('ampm')
 
     #TODO factor this out
 
+    # parse hours and minutes
+    index = 0
+    for char in dinner_time:
+        if char == ":":
+            break
+        index += 1
+
+    hour = int(dinner_time[:index])
+    minutes = int(dinner_time[index+1:])
+
+    # convert to 24 hour time
+    if (ampm == "pm") and (hour >= 12):
+        if hour == 12:
+            hour == 0
+        else:
+            hour += 12
+
     date = datetime.now()
-    # this_timezone = timezone('US/Pacific')
-    # currently just testing this, only works for 24 hour format time
-    # and only for 2 digit hours i.e. 19:00
-    # (needs to be input like above, will make more flexible later)
-    hour = int(dinner_time[:2])
-    minutes = int(dinner_time[3:])
     date = date.replace(hour=hour, minute=minutes, second=0, tzinfo=None)
     # convert to UTC
     # utc = pytz.utc
@@ -159,11 +156,28 @@ def register_process():
 
     return redirect("/")
 
+
+@app.route("/main")
+def main_page():
+    """Render main page"""
+
+    user_id = session["user_id"]
+
+    cat = Cat.query.filter_by(user_id=user_id).first()
+
+    return render_template("main.html", name=cat.name, toy1=cat.toy1, 
+                                        toy2=cat.toy2, snack=cat.snack, 
+                                        activity1=cat.activity1,
+                                        activity2=cat.activity2, 
+                                        dinner_time=cat.dinner_time)
+
+
 @app.route("/update")
 def show_update():
     """Show update page"""
 
     return render_template("update.html")
+
 
 @app.route("/update", methods=['POST'])
 def do_update():

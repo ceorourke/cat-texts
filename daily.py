@@ -49,16 +49,15 @@ if __name__ == "__main__":
     # put in 30
     # got back 23
 
-    this_timezone = timezone('US/Pacific')
-    date = dinner_time[0].replace(minute=minutes, tzinfo=this_timezone) # needs a timezone to convert to UTC
-    # convert to UTC
+    this_timezone = timezone('US/Pacific') # needs a timezone to convert to UTC
+    date = dinner_time[0].replace(minute=minutes, tzinfo=this_timezone) 
     utc = pytz.utc
-    date = date.astimezone(utc)
+    date = date.astimezone(utc) # convert to UTC
 
-    hour = date.hour
-    minute = date.minute
+    # hour = date.hour
+    # minute = date.minute
 
-    this_time = str(hour) + ":" + str(minute)
+    this_time = str(date.hour) + ":" + str(date.minute)
     print this_time
     name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
     name = str(name[0])
