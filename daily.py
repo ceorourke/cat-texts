@@ -33,29 +33,37 @@ def daily_text():
 if __name__ == "__main__":
     connect_to_db(app)
 
+    # TODO currently this is pulling my phone number from secrets.sh
+    # should change to query db for all phone numbers and do this for everyone
+    # ...even though technically everything in the db is my phone number
+    # since I have the trial Twilio account. could shoot off texts at different
+    # times for testing purposes so I'm not waiting a full 24 hours 
+
     user_id = User.query.filter_by(phone_number=phone_number).first()
     user_id = user_id.user_id
     dinner_time = db.session.query(Cat.dinner_time).filter(User.user_id==user_id).first()
 
-    # currently just testing this, only works for 24 hour format time
-    # and only for 2 digit hours i.e. 19:00
-    # (needs to be input like above, will make more flexible later)
-    # hour = dinner_time[0:2]
-    # hour = int(hour)
-    # minutes = int(dinner_time[3:])
-    minutes = dinner_time[0].minute + 7
+    minutes = dinner_time[0].minute
+    hour = dinner_time[0].hour
+
     # this seems to be 7 minutes EARLY, so adding 7 minutes to make it correct
-    # note this is not flexible if it's 14:59 for example, just a hacky workaround for now
-    # put in 30
-    # got back 23
+
+    if (minutes + 7) >= 60: # check if adding 7 minutes pushes it over to next hour
+        if hour == 23: # check if the hour is 11 pm / 23:XX
+            hour = 0 # make it 00:XX
+        else:
+            hour += 1
+        if (minutes + 7) == 60: # convert minutes
+            minutes = 0
+        else:
+            minutes = (minutes + 7) - 60  # wrap around ... 
+    else:          
+        minutes += 7
 
     this_timezone = timezone('US/Pacific') # needs a timezone to convert to UTC
     date = dinner_time[0].replace(minute=minutes, tzinfo=this_timezone) 
     utc = pytz.utc
     date = date.astimezone(utc) # convert to UTC
-
-    # hour = date.hour
-    # minute = date.minute
 
     this_time = str(date.hour) + ":" + str(date.minute)
     print this_time
