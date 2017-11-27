@@ -26,6 +26,20 @@ def main():
 
     return render_template("home.html")
 
+@app.route("/main")
+def main_page():
+    """Render main page"""
+
+    user_id = session["user_id"]
+
+    cat = Cat.query.filter_by(user_id=user_id).first()
+
+    return render_template("main.html", name=cat.name, toy1=cat.toy1, 
+                                        toy2=cat.toy2, snack=cat.snack, 
+                                        activity1=cat.activity1,
+                                        activity2=cat.activity2, 
+                                        dinner_time=cat.dinner_time)
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -39,30 +53,17 @@ def login():
     if existing_email is not None and existing_email.password == password:
         # add user to session
         session["user_id"] = existing_email.user_id
+        user_id = session["user_id"]
 
         flash("Successfully logged in!")
 
-        user_id = session["user_id"]
+        cat = Cat.query.filter_by(user_id=user_id).first()
 
-        name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
-        toy1 = db.session.query(Cat.toy1).filter(User.user_id==user_id).first()
-        toy2 = db.session.query(Cat.toy2).filter(User.user_id==user_id).first()
-        snack = db.session.query(Cat.snack).filter(User.user_id==user_id).first()
-        activity1 = db.session.query(Cat.activity1).filter(User.user_id==user_id).first()
-        activity2 = db.session.query(Cat.activity2).filter(User.user_id==user_id).first()
-        dinner_time = db.session.query(Cat.dinner_time).filter(User.user_id==user_id).first()
-
-        name = str(name[0])
-        toy1 = str(toy1[0])
-        toy2 = str(toy2[0])
-        snack = str(snack[0])
-        activity1 = str(activity1[0])
-        activity2 = str(activity2[0])
-        dinner_time = str(dinner_time[0])
-
-        return render_template("main.html", name=name, toy1=toy1, toy2=toy2,
-                                            snack=snack, activity1=activity1,
-                                            activity2=activity2, dinner_time=dinner_time)
+        return render_template("main.html", name=cat.name, toy1=cat.toy1, 
+                                            toy2=cat.toy2, snack=cat.snack, 
+                                            activity1=cat.activity1,
+                                            activity2=cat.activity2, 
+                                            dinner_time=cat.dinner_time)
 
     elif existing_email is None:
         flash("Incorrect email.")
@@ -103,16 +104,15 @@ def register_process():
     #TODO factor this out
 
     date = datetime.now()
-    this_timezone = timezone('US/Pacific')
+    # this_timezone = timezone('US/Pacific')
     # currently just testing this, only works for 24 hour format time
     # and only for 2 digit hours i.e. 19:00
     # (needs to be input like above, will make more flexible later)
-    hour = int(dinner_time[0:2])
+    hour = int(dinner_time[:2])
     minutes = int(dinner_time[3:])
-    # date = date.replace(hour=hour, minute=minutes, second=0, tzinfo=this_timezone)
     date = date.replace(hour=hour, minute=minutes, second=0, tzinfo=None)
     # convert to UTC
-    utc = pytz.utc
+    # utc = pytz.utc
     # date = date.astimezone(utc)
 
     snack = request.form.get('cat-snack')
@@ -120,7 +120,6 @@ def register_process():
     activity2 = request.form.get('cat-activity2')
     toy1 = request.form.get('cat-toy')
     toy2 = request.form.get('cat-toy2')
-    current_user = session["user_id"]
 
     existing_email = User.query.filter_by(email=email).first()
 
@@ -130,6 +129,11 @@ def register_process():
         # TODO hash password
         db.session.add(new_user)
         db.session.commit()
+
+
+        existing_email = User.query.filter_by(email=email).first()
+        session["user_id"] = existing_email.user_id
+        current_user = session["user_id"]
 
         new_cat = Cat(user_id=current_user, name=name, dinner_time=date, 
                   snack=snack, activity1=activity1, activity2=activity2, 
@@ -150,8 +154,7 @@ def register_process():
 
     else:
         flash("Email already in use")
-        # TODO probably handle this in AJAX on the form and be more specific
-        # as to whether it was the username or email that failed
+        # TODO probably handle this in AJAX on the form
 
 
     return redirect("/")
