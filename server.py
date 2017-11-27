@@ -153,7 +153,6 @@ def register_process():
         flash("Email already in use")
         # TODO probably handle this in AJAX on the form
 
-
     return redirect("/")
 
 
@@ -190,7 +189,7 @@ def do_update():
 
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
-    # TODO convert to UTC?
+    # TODO convert time as in registration
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
     activity2 = request.form.get('cat-activity2')
