@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, render_template, session, flash
 from twilio.twiml.messaging_response import MessagingResponse
 from jinja2 import StrictUndefined
 from model import connect_to_db, db, User, Cat
+from helper_functions import *
 import random
 from twilio.rest import Client
 import os
@@ -87,38 +88,44 @@ def register_process():
     dinner_time = request.form.get('dinner-time')
     ampm = request.form.get('ampm')
 
-    #TODO factor this out once it's working properly
-    # probably into 3 helper functions
+    #TODO factor this out into helper functions
+    time = parse_time(dinner_time)
+    hour = time[0]
+    minutes = time[1]
 
     # parse hours and minutes
-    index = 0
-    for char in dinner_time:
-        if char == ":":
-            break
-        index += 1
+    # index = 0
+    # for char in dinner_time:
+    #     if char == ":":
+    #         break
+    #     index += 1
 
-    hour = int(dinner_time[:index])
-    minutes = int(dinner_time[index+1:])
+    # hour = int(dinner_time[:index])
+    # minutes = int(dinner_time[index+1:])
 
     # convert to 24 hour time
-    if ampm == "pm":
-        if hour == 12:
-            hour == 0
-        else:
-            hour += 12
 
-    date = datetime.now() # create a datetime object (in UTC time by default)
-    utc = pytz.utc 
-    date = date.replace(tzinfo=utc) # add utc timezone info
+    hour = make_24_hour_time(ampm, hour)
+    # if ampm == "pm":
+    #     if hour == 12:
+    #         hour == 0
+    #     else:
+    #         hour += 12
 
-    # TODO get the users' timezone rather than hardcoding PST conversion
-    this_timezone = timezone('US/Pacific')
-    date = date.astimezone(this_timezone)
-    # change the hours and minutes to user input, clear seconds and microseconds
-    date = date.replace(hour=hour, minute=minutes, second=0, microsecond=0)
+    date = convert_to_utc(hour, minutes)
 
-    # change back to UTC to store in database
-    date = date.astimezone(utc)
+    # date = datetime.now() # create a datetime object (in UTC time by default)
+    # utc = pytz.utc 
+    # date = date.replace(tzinfo=utc) # add utc timezone info
+
+    # # TODO get the users' timezone rather than hardcoding PST conversion
+    # this_timezone = timezone('US/Pacific')
+    # date = date.astimezone(this_timezone)
+    # # change the hours and minutes to user input, clear seconds and microseconds
+    # date = date.replace(hour=hour, minute=minutes, second=0, microsecond=0)
+
+    # # change back to UTC to store in database
+    # date = date.astimezone(utc)
 
 
     snack = request.form.get('cat-snack')
