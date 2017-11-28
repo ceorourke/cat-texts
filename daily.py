@@ -34,6 +34,7 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # TODO currently this is pulling my phone number from secrets.sh
+    # and getting the first entry, so it's always user id 1
     # should change to query db for all phone numbers and do this for everyone
     # ...even though technically everything in the db is my phone number
     # since I have the trial Twilio account. could shoot off texts at different
@@ -46,32 +47,26 @@ if __name__ == "__main__":
     minutes = dinner_time[0].minute
     hour = dinner_time[0].hour
 
-    # this seems to be 7 minutes EARLY, so adding 7 minutes to make it correct
+    if len(str(hour)) < 2:
+        new_hour = "0"
+        new_hour += str(hour)
+    else:
+        new_hour = str(hour)
 
-    if (minutes + 7) >= 60: # check if adding 7 minutes pushes it over to next hour
-        if hour == 23: # check if the hour is 11 pm / 23:XX
-            hour = 0 # make it 00:XX
-        else:
-            hour += 1
-        if (minutes + 7) == 60: # convert minutes
-            minutes = 0
-        else:
-            minutes = (minutes + 7) - 60  # wrap around ... 
-    else:          
-        minutes += 7
+    if len(str(minutes)) < 2:
+        new_minutes = "0"
+        new_minutes += str(minutes)
+    else:
+        new_minutes = str(minutes)
 
-    this_timezone = timezone('US/Pacific') # needs a timezone to convert to UTC
-    date = dinner_time[0].replace(minute=minutes, tzinfo=this_timezone) 
-    utc = pytz.utc
-    date = date.astimezone(utc) # convert to UTC
-
-    this_time = str(date.hour) + ":" + str(date.minute)
+    this_time = new_hour + ":" + new_minutes
     print this_time
+    print type(this_time)
     name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
     name = str(name[0])
     print name
     schedule.every().day.at(this_time).do(daily_text)
-    # schedule.every().day.at("21:10").do(daily_text)
+    # schedule.every().day.at("01:24").do(daily_text)
     # schedule.every(5).seconds.do(daily_text)
 
     while True:

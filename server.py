@@ -14,10 +14,10 @@ account_sid = os.environ.get("account_sid")
 # Your Auth Token from twilio.com/console
 auth_token = os.environ.get("auth_token")
 client = Client(account_sid, auth_token)
-phone_number = os.environ.get("phone_number")
+# phone_number = os.environ.get("phone_number") # not hard coding this anymore
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
-############################################################################
+################################################################################
 
 @app.route("/")
 def main():
@@ -87,7 +87,8 @@ def register_process():
     dinner_time = request.form.get('dinner-time')
     ampm = request.form.get('ampm')
 
-    #TODO factor this out
+    #TODO factor this out once it's working properly
+    # probably into 3 helper functions
 
     # parse hours and minutes
     index = 0
@@ -100,17 +101,25 @@ def register_process():
     minutes = int(dinner_time[index+1:])
 
     # convert to 24 hour time
-    if (ampm == "pm") and (hour >= 12):
+    if ampm == "pm":
         if hour == 12:
             hour == 0
         else:
             hour += 12
 
-    date = datetime.now()
-    date = date.replace(hour=hour, minute=minutes, second=0, tzinfo=None)
-    # convert to UTC
-    # utc = pytz.utc
-    # date = date.astimezone(utc)
+    date = datetime.now() # create a datetime object (in UTC time by default)
+    utc = pytz.utc 
+    date = date.replace(tzinfo=utc) # add utc timezone info
+
+    # TODO get the users' timezone rather than hardcoding PST conversion
+    this_timezone = timezone('US/Pacific')
+    date = date.astimezone(this_timezone)
+    # change the hours and minutes to user input, clear seconds and microseconds
+    date = date.replace(hour=hour, minute=minutes, second=0, microsecond=0)
+
+    # change back to UTC to store in database
+    date = date.astimezone(utc)
+
 
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
@@ -139,7 +148,7 @@ def register_process():
         db.session.commit()
 
         message = client.messages.create(
-        to=phone_number, 
+        to=phone, 
         from_="+14138486585",
         # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
         body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
