@@ -96,7 +96,7 @@ def register_process():
     # parse hours and minutes
     # index = 0
     # for char in dinner_time:
-    #     if char == ":":
+    #     if char == ":":q
     #         break
     #     index += 1
 
