@@ -42,6 +42,7 @@ def convert_to_utc(hour, minutes):
     # TODO get the users' timezone rather than hardcoding PST conversion
     this_timezone = timezone('US/Pacific')
     date = date.astimezone(this_timezone)
+
     # change the hours and minutes to user input, clear seconds and microseconds
     date = date.replace(hour=hour, minute=minutes, second=0, microsecond=0)
 
@@ -49,3 +50,6 @@ def convert_to_utc(hour, minutes):
     date = date.astimezone(utc)
 
     return date
+
+
+

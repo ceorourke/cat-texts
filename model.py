@@ -14,7 +14,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True, nullable=False)
     email = db.Column(db.String(50), nullable=False)
     phone_number = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(200), nullable=False)
 
     def __repr__(self):
         """Provide useful info when printed to console"""
