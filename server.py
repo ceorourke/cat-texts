@@ -1,21 +1,19 @@
 from flask import Flask, request, redirect, render_template, session, flash
-from twilio.twiml.messaging_response import MessagingResponse
 from jinja2 import StrictUndefined
 from model import connect_to_db, db, User, Cat
 from helper_functions import *
-import random
-from twilio.rest import Client
-import os
-# import time
-from datetime import datetime
 from pytz import timezone
 import pytz
+import random
+import bcrypt
+import os
+from twilio.twiml.messaging_response import MessagingResponse
+from twilio.rest import Client
 # Your Account SID from twilio.com/console
 account_sid = os.environ.get("account_sid")
 # Your Auth Token from twilio.com/console
 auth_token = os.environ.get("auth_token")
 client = Client(account_sid, auth_token)
-# phone_number = os.environ.get("phone_number") # not hard coding this anymore
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 ################################################################################
@@ -78,7 +76,10 @@ def register_process():
     """Get information from registration form."""
 
     email = request.form.get("email")
+
     password = request.form.get("password")
+    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
     phone = request.form.get("phone")
     country_code = '+1'
     phone = ''.join(num for num in phone if num not in '-')
@@ -88,45 +89,11 @@ def register_process():
     dinner_time = request.form.get('dinner-time')
     ampm = request.form.get('ampm')
 
-    #TODO factor this out into helper functions
     time = parse_time(dinner_time)
     hour = time[0]
     minutes = time[1]
-
-    # parse hours and minutes
-    # index = 0
-    # for char in dinner_time:
-    #     if char == ":":q
-    #         break
-    #     index += 1
-
-    # hour = int(dinner_time[:index])
-    # minutes = int(dinner_time[index+1:])
-
-    # convert to 24 hour time
-
     hour = make_24_hour_time(ampm, hour)
-    # if ampm == "pm":
-    #     if hour == 12:
-    #         hour == 0
-    #     else:
-    #         hour += 12
-
     date = convert_to_utc(hour, minutes)
-
-    # date = datetime.now() # create a datetime object (in UTC time by default)
-    # utc = pytz.utc 
-    # date = date.replace(tzinfo=utc) # add utc timezone info
-
-    # # TODO get the users' timezone rather than hardcoding PST conversion
-    # this_timezone = timezone('US/Pacific')
-    # date = date.astimezone(this_timezone)
-    # # change the hours and minutes to user input, clear seconds and microseconds
-    # date = date.replace(hour=hour, minute=minutes, second=0, microsecond=0)
-
-    # # change back to UTC to store in database
-    # date = date.astimezone(utc)
-
 
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
@@ -138,11 +105,9 @@ def register_process():
 
     # check if the email is in use
     if existing_email is None:
-        new_user = User(email=email, password=password, phone_number=phone)
-        # TODO hash password
+        new_user = User(email=email, password=hashed, phone_number=phone)
         db.session.add(new_user)
         db.session.commit()
-
 
         existing_email = User.query.filter_by(email=email).first()
         session["user_id"] = existing_email.user_id
@@ -180,6 +145,11 @@ def main_page():
 
     cat = Cat.query.filter_by(user_id=user_id).first()
 
+    print "*********"
+    print "in main"
+    print cat.dinner_time
+    print cat.dinner_time.tzinfo
+
     return render_template("main.html", name=cat.name, toy1=cat.toy1, 
                                         toy2=cat.toy2, snack=cat.snack, 
                                         activity1=cat.activity1,
@@ -198,62 +168,51 @@ def show_update():
 def do_update():
     """Update details in db"""
 
-    #TODO this isn't actually updating in DB :(
-
-    current_user = session["user_id"]
-    cat = db.session.query(Cat).filter(User.user_id==current_user).first()
-
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
-    # TODO convert time as in registration
+    ampm = request.form.get('ampm')
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
     activity2 = request.form.get('cat-activity2')
     toy1 = request.form.get('cat-toy')
     toy2 = request.form.get('cat-toy2')
 
+    user_id = session["user_id"]
+    cat = Cat.query.filter_by(user_id=user_id).first()
+
     if name:
         cat.name = name
-    else: 
-        name = db.session.query(Cat.name).filter(User.user_id==current_user).first()
-        name = str(name[0])
+
     if dinner_time:
-        cat.dinner_time = dinner_time
-    else:
-        dinner_time = db.session.query(Cat.dinner_time).filter(User.user_id==current_user).first()
-        dinner_time = str(dinner_time[0])
+        time = parse_time(dinner_time)
+        hour = time[0]
+        minutes = time[1]
+        hour = make_24_hour_time(ampm, hour)
+        date = convert_to_utc(hour, minutes)    
+
+        cat.dinner_time = date
+        cat.dinner_time = cat.dinner_time.replace(tzinfo=None)
+
     if toy1:
         cat.toy1 = toy1
-    else:
-        toy1 = db.session.query(Cat.toy1).filter(User.user_id==current_user).first()
-        toy1 = str(toy1[0])
     if toy2:
         cat.toy2 = toy2
-    else:
-        toy2 = db.session.query(Cat.toy2).filter(User.user_id==current_user).first()
-        toy2 = str(toy2[0])
     if snack:
         cat.snack = snack
-    else:
-        snack = db.session.query(Cat.snack).filter(User.user_id==current_user).first()
-        snack = str(snack[0])
     if activity1:
         cat.activity1 = activity1
-    else:
-        activity1 = db.session.query(Cat.activity1).filter(User.user_id==current_user).first()
-        activity1 = str(activity1[0])
     if activity2:
         cat.activity2 = activity2
-    else:
-        activity2 = db.session.query(Cat.activity2).filter(User.user_id==current_user).first()
-        activity2 = str(activity2[0])
 
-    db.session.commit
+    db.session.commit()
+
     flash("Successfully updated " + cat.name + "'s info!")
 
-    return render_template("main.html", name=name, toy1=toy1, toy2=toy2,
-                                        snack=snack, activity1=activity1,
-                                        activity2=activity2, dinner_time=dinner_time)
+    return render_template("main.html", name=cat.name, toy1=cat.toy1, 
+                                        toy2=cat.toy2, snack=cat.snack, 
+                                        activity1=cat.activity1,
+                                        activity2=cat.activity2, 
+                                        dinner_time=cat.dinner_time)
 
 
 @app.route("/sms", methods=['POST'])

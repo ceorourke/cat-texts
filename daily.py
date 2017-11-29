@@ -26,6 +26,10 @@ def daily_text():
 
     print(message.sid)
 
+def run_threaded(job_func):
+    job_thread = threading.Thread(target=job_func)
+    job_thread.start()
+
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -64,7 +68,7 @@ if __name__ == "__main__":
             # first one and stays there forever. how can I run the others?
             # use threading? need to read more about this
 
-            schedule.every().day.at(this_time).do(daily_text)
+            schedule.every().day.at(this_time).do(run_threaded, daily_text)
             # can't pass variables to daily_text it seems
             # this doesn't work if i pass phone_number, for example
 
