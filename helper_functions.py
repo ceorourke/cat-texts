@@ -49,7 +49,7 @@ def make_12_hour_time(hour):
 
     return hour
 
-def convert_to_utc(hour, minutes):
+def convert_to_utc(hour, minutes, user_timezone):
     """Take in user inputted time and create a UTC datetime object"""
 
     date = datetime.now() # create a datetime object (in UTC time by default)
@@ -57,7 +57,8 @@ def convert_to_utc(hour, minutes):
     date = date.replace(tzinfo=utc) # add utc timezone info
 
     # TODO get the users' timezone rather than hardcoding PST conversion
-    this_timezone = timezone('US/Pacific')
+    # this_timezone = timezone('US/Pacific')
+    this_timezone = timezone(user_timezone)
     date = date.astimezone(this_timezone)
 
     # change the hours and minutes to user input, clear seconds and microseconds

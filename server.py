@@ -47,9 +47,9 @@ def login():
         cat = Cat.query.filter_by(user_id=user_id).first()
 
         # TODO this is dupe code from main route, factor out
+        user_time = cat.user.timezone
         cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
-        # TODO get user's local time instead of hardcoding PST
-        cat.dinner_time = cat.dinner_time.astimezone(timezone('US/Pacific'))
+        cat.dinner_time = cat.dinner_time.astimezone(timezone(user_time))
 
         time = [str(cat.dinner_time.hour), ":", str(cat.dinner_time.minute)]
         time = parse_time("".join(time))
@@ -88,7 +88,9 @@ def do_logout():
 def register():
     """Show registration form"""
 
-    return render_template("register.html")
+    timezones = pytz.common_timezones
+
+    return render_template("register.html", timezones=timezones)
 
 @app.route("/register", methods=["GET", "POST"])
 def register_process():
@@ -107,12 +109,13 @@ def register_process():
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
     ampm = request.form.get('ampm')
+    timezone = request.form.get('timezone')
 
     time = parse_time(dinner_time)
     hour = time[0]
     minutes = time[1]
     hour = make_24_hour_time(ampm, hour)
-    date = convert_to_utc(hour, minutes)
+    date = convert_to_utc(hour, minutes, timezone)
 
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
@@ -124,7 +127,8 @@ def register_process():
 
     # check if the email is in use
     if existing_email is None:
-        new_user = User(email=email, password=password, phone_number=phone)
+        new_user = User(email=email, password=password, phone_number=phone,
+                        timezone=timezone)
         db.session.add(new_user)
         db.session.commit()
 
@@ -164,9 +168,9 @@ def main_page():
     cat = Cat.query.filter_by(user_id=user_id).first()
 
     # TODO this is dupe code from login route, factor out
+    user_time = cat.user.timezone
     cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
-    # TODO get user's local time instead of hardcoding PST
-    cat.dinner_time = cat.dinner_time.astimezone(timezone('US/Pacific'))
+    cat.dinner_time = cat.dinner_time.astimezone(timezone(user_time))
 
     time = [str(cat.dinner_time.hour), ":", str(cat.dinner_time.minute)]
     time = parse_time("".join(time))
@@ -189,7 +193,9 @@ def main_page():
 def show_update():
     """Show update page"""
 
-    return render_template("update.html")
+    timezones = pytz.common_timezones
+
+    return render_template("update.html", timezones=timezones)
 
 
 @app.route("/update", methods=['POST'])
@@ -199,6 +205,7 @@ def do_update():
     name = request.form.get('cat-name')
     dinner_time = request.form.get('dinner-time')
     ampm = request.form.get('ampm')
+    timezone = request.form.get('timezone')
     snack = request.form.get('cat-snack')
     activity1 = request.form.get('cat-activity')
     activity2 = request.form.get('cat-activity2')
@@ -213,10 +220,9 @@ def do_update():
 
     if dinner_time:
         time = parse_time(dinner_time)
-        hour = time[0]
-        minutes = time[1]
+        hour, minutes = time
         hour = make_24_hour_time(ampm, hour)
-        date = convert_to_utc(hour, minutes)    
+        date = convert_to_utc(hour, minutes, timezone)  
 
         cat.dinner_time = date
         cat.dinner_time = cat.dinner_time.replace(tzinfo=None)
@@ -233,6 +239,20 @@ def do_update():
         cat.activity2 = activity2
 
     db.session.commit()
+    
+    # TODO this is dupe code from login route, factor out
+    user_time = cat.user.timezone
+    cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
+    cat.dinner_time = cat.dinner_time.astimezone(timezone(user_time))
+
+    time = [str(cat.dinner_time.hour), ":", str(cat.dinner_time.minute)]
+    time = parse_time("".join(time))
+    hour, minutes = time
+
+    ampm = am_or_pm(hour) # get whether am or pm
+    hour = make_12_hour_time(hour) # convert to 12 hour time
+
+    cat.dinner_time = cat.dinner_time.replace(hour=hour)
 
     flash("Successfully updated " + cat.name + "'s info!")
 
@@ -240,7 +260,8 @@ def do_update():
                                         toy2=cat.toy2, snack=cat.snack, 
                                         activity1=cat.activity1,
                                         activity2=cat.activity2, 
-                                        dinner_time=cat.dinner_time)
+                                        dinner_time=cat.dinner_time,
+                                        ampm=ampm)
 
 
 @app.route("/sms", methods=['POST'])

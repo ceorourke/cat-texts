@@ -29,6 +29,16 @@
                placeholder="7:00" required> 
         <input type="radio" name="ampm" id="ampm" value="am">am
         <input type="radio" name="ampm" id="ampm" value="pm">pm </br></br>
+        Your timezone: 
+          <select name="timezone">
+          {% for zone in timezones %}
+            <option value={{ zone }}>{{ zone }} </option>
+            {% endfor %}
+          </select>
+        </br></br>
+
+
+
   <!-- <input type="time" name="usr_time"> -->
         Your cat's favorite snack:
         <input type="text" name="cat-snack" id="cat-snack"
