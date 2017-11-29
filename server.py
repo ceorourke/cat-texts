@@ -37,7 +37,6 @@ def login():
 
     existing_email = User.query.filter_by(email=email).first()
 
-    # if existing_email is not None and existing_email.password == password:
     if existing_email is not None and bcrypt.checkpw(password, hashed):
         # add user to session
         session["user_id"] = existing_email.user_id
@@ -47,11 +46,27 @@ def login():
 
         cat = Cat.query.filter_by(user_id=user_id).first()
 
+        # TODO this is dupe code from main route, factor out
+        cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
+        # TODO get user's local time instead of hardcoding PST
+        cat.dinner_time = cat.dinner_time.astimezone(timezone('US/Pacific'))
+
+        time = [str(cat.dinner_time.hour), ":", str(cat.dinner_time.minute)]
+        time = parse_time("".join(time))
+        hour, minutes = time
+
+        ampm = am_or_pm(hour) # get whether am or pm
+        hour = make_12_hour_time(hour) # convert to 12 hour time
+
+        cat.dinner_time = cat.dinner_time.replace(hour=hour)
+
+
         return render_template("main.html", name=cat.name, toy1=cat.toy1, 
                                             toy2=cat.toy2, snack=cat.snack, 
                                             activity1=cat.activity1,
                                             activity2=cat.activity2, 
-                                            dinner_time=cat.dinner_time)
+                                            dinner_time=cat.dinner_time,
+                                            ampm=ampm)
 
     elif existing_email is None:
         flash("Incorrect email.")
@@ -146,19 +161,28 @@ def main_page():
     """Render main page"""
 
     user_id = session["user_id"]
-
     cat = Cat.query.filter_by(user_id=user_id).first()
 
-    print "*********"
-    print "in main"
-    print cat.dinner_time
-    print cat.dinner_time.tzinfo
+    # TODO this is dupe code from login route, factor out
+    cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
+    # TODO get user's local time instead of hardcoding PST
+    cat.dinner_time = cat.dinner_time.astimezone(timezone('US/Pacific'))
+
+    time = [str(cat.dinner_time.hour), ":", str(cat.dinner_time.minute)]
+    time = parse_time("".join(time))
+    hour, minutes = time
+
+    ampm = am_or_pm(hour) # get whether am or pm
+    hour = make_12_hour_time(hour) # convert to 12 hour time
+
+    cat.dinner_time = cat.dinner_time.replace(hour=hour)
 
     return render_template("main.html", name=cat.name, toy1=cat.toy1, 
                                         toy2=cat.toy2, snack=cat.snack, 
                                         activity1=cat.activity1,
                                         activity2=cat.activity2, 
-                                        dinner_time=cat.dinner_time)
+                                        dinner_time=cat.dinner_time,
+                                        ampm=ampm)
 
 
 @app.route("/update")
@@ -224,28 +248,15 @@ def incoming_sms():
     """Send a dynamic reply to an incoming text message"""
 
     phone = request.values.get('From', None)
-    user_id = User.query.filter_by(phone_number=phone).first()
-    user_id = user_id.user_id
+    user_id = User.query.filter_by(phone_number=phone).one()
+    cat = Cat.query.filter_by(user_id=user_id.user_id).first()
 
-    name = db.session.query(Cat.name).filter(User.user_id==user_id).first()
-    toy1 = db.session.query(Cat.toy1).filter(User.user_id==user_id).first()
-    toy2 = db.session.query(Cat.toy2).filter(User.user_id==user_id).first()
-    snack = db.session.query(Cat.snack).filter(User.user_id==user_id).first()
-    activity1 = db.session.query(Cat.activity1).filter(User.user_id==user_id).first()
-    activity2 = db.session.query(Cat.activity2).filter(User.user_id==user_id).first()
-
-    name = str(name[0])
-    toy1 = str(toy1[0])
-    toy2 = str(toy2[0])
-    snack = str(snack[0])
-    activity1 = str(activity1[0])
-    activity2 = str(activity2[0])
-
-    toy1_msg = 'Can we play with my ' + toy1 + '?'
-    toy2_msg = "I think it's time for the " + toy2 + "!!!"
-    snack_msg = "I'm hungry!! I want " + snack + "!"
-    activity1_msg = "Whachu up to? I'm busy " + activity1 + "..."
-    activity2_msg = "Me? I'm just " + activity2 + "..."
+    toy1_msg = 'Can we play with my ' + cat.toy1 + '?'
+    toy2_msg = "I think it's time for the " + cat.toy2 + "!!!"
+    snack_msg = "I'm hungry!! I want " + cat.snack + "!"
+    activity1_msg = "Whachu up to? I'm busy " + cat.activity1 + "..."
+    activity2_msg = "Me? I'm just " + cat.activity2 + "..."
+    # TODO make more messages! it's pretty repetitive right meow
 
     cat_responses = [toy1_msg, toy2_msg, snack_msg, activity1_msg, activity2_msg]
 
@@ -255,10 +266,10 @@ def incoming_sms():
     resp = MessagingResponse()
 
     # Determine the right reply for this message
-    if body == 'hey' or body == 'Hey':
-        resp.message("Hi! Where's my " + snack + "?!")
-
-    elif body == 'bye' or body == 'Bye':
+    # TODO make more of these! it'll be more fun for the user
+    if (body == 'hey') or (body == 'Hey'):
+        resp.message("Hi! Where's my " + cat.snack + "?!")
+    elif (body == 'bye') or (body == 'Bye'):
         resp.message("Bye? I'm just going to text you again later.")
     else:
         reply = random.choice(cat_responses)
@@ -268,8 +279,6 @@ def incoming_sms():
 
 
 if __name__ == "__main__":
-
-    from flask import Flask
 
     app.debug = True
     app.jinja_env.auto_reload = app.debug  # make sure templates, etc. are not cached in debug mode
