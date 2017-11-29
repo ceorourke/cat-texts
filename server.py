@@ -31,10 +31,14 @@ def login():
 
     email = request.form.get("email")
     password = request.form.get("password")
+    password = password.encode('utf-8')
+
+    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
 
     existing_email = User.query.filter_by(email=email).first()
 
-    if existing_email is not None and existing_email.password == password:
+    # if existing_email is not None and existing_email.password == password:
+    if existing_email is not None and bcrypt.checkpw(password, hashed):
         # add user to session
         session["user_id"] = existing_email.user_id
         user_id = session["user_id"]
@@ -78,7 +82,7 @@ def register_process():
     email = request.form.get("email")
 
     password = request.form.get("password")
-    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     phone = request.form.get("phone")
     country_code = '+1'
@@ -105,7 +109,7 @@ def register_process():
 
     # check if the email is in use
     if existing_email is None:
-        new_user = User(email=email, password=hashed, phone_number=phone)
+        new_user = User(email=email, password=password, phone_number=phone)
         db.session.add(new_user)
         db.session.commit()
 
