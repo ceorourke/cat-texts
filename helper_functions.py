@@ -32,6 +32,23 @@ def make_24_hour_time(ampm, hour):
 
     return hour
 
+def am_or_pm(hour):
+    """Return whether the time is am or pm based on 24 hour time formatting"""
+
+    if hour > 12:
+        return "pm"
+    return "am"
+
+def make_12_hour_time(hour):
+    """Convert 24 hour time from db to 12 hour time for display"""
+
+    if hour == 0:
+        hour = 12
+    if hour > 12:
+        hour -= 12
+
+    return hour
+
 def convert_to_utc(hour, minutes):
     """Take in user inputted time and create a UTC datetime object"""
 
