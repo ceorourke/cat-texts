@@ -67,6 +67,7 @@ def register():
     """Show registration form"""
 
     timezones = pytz.common_timezones
+    timezones.insert(0, "Select a timezone")
 
     return render_template("register.html", timezones=timezones)
 
@@ -171,8 +172,10 @@ def show_update():
     """Show update page"""
 
     timezones = pytz.common_timezones
+    tz = ['US/Pacific']
+    tz.extend(timezones)
 
-    return render_template("update.html", timezones=timezones)
+    return render_template("update.html", timezones=tz)
 
 
 @app.route("/update", methods=['POST'])
