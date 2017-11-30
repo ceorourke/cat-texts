@@ -43,30 +43,8 @@ def login():
         user_id = session["user_id"]
 
         flash("Successfully logged in!")
-
-        cat = Cat.query.filter_by(user_id=user_id).first()
-
-        # TODO this is dupe code from main route, factor out
-        user_time = cat.user.timezone
-        cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
-        cat.dinner_time = cat.dinner_time.astimezone(timezone(user_time))
-
-        time = [str(cat.dinner_time.hour), ":", str(cat.dinner_time.minute)]
-        time = parse_time("".join(time))
-        hour, minutes = time
-
-        ampm = am_or_pm(hour) # get whether am or pm
-        hour = make_12_hour_time(hour) # convert to 12 hour time
-
-        cat.dinner_time = cat.dinner_time.replace(hour=hour)
-
-
-        return render_template("main.html", name=cat.name, toy1=cat.toy1, 
-                                            toy2=cat.toy2, snack=cat.snack, 
-                                            activity1=cat.activity1,
-                                            activity2=cat.activity2, 
-                                            dinner_time=cat.dinner_time,
-                                            ampm=ampm)
+        
+        return redirect("/main") 
 
     elif existing_email is None:
         flash("Incorrect email.")
@@ -112,8 +90,7 @@ def register_process():
     timezone = request.form.get('timezone')
 
     time = parse_time(dinner_time)
-    hour = time[0]
-    minutes = time[1]
+    hour, minutes = time
     hour = make_24_hour_time(ampm, hour)
     date = convert_to_utc(hour, minutes, timezone)
 
@@ -167,7 +144,7 @@ def main_page():
     user_id = session["user_id"]
     cat = Cat.query.filter_by(user_id=user_id).first()
 
-    # TODO this is dupe code from login route, factor out
+    # TODO maybe factor out, this all just formats the timezone for display
     user_time = cat.user.timezone
     cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
     cat.dinner_time = cat.dinner_time.astimezone(timezone(user_time))
@@ -175,18 +152,18 @@ def main_page():
     time = [str(cat.dinner_time.hour), ":", str(cat.dinner_time.minute)]
     time = parse_time("".join(time))
     hour, minutes = time
+    new_minutes = make_minutes(minutes)
 
     ampm = am_or_pm(hour) # get whether am or pm
     hour = make_12_hour_time(hour) # convert to 12 hour time
 
-    cat.dinner_time = cat.dinner_time.replace(hour=hour)
 
     return render_template("main.html", name=cat.name, toy1=cat.toy1, 
                                         toy2=cat.toy2, snack=cat.snack, 
                                         activity1=cat.activity1,
                                         activity2=cat.activity2, 
-                                        dinner_time=cat.dinner_time,
-                                        ampm=ampm)
+                                        ampm=ampm, hour=hour, 
+                                        minutes=new_minutes)
 
 
 @app.route("/update")
@@ -222,8 +199,7 @@ def do_update():
         time = parse_time(dinner_time)
         hour, minutes = time
         hour = make_24_hour_time(ampm, hour)
-        date = convert_to_utc(hour, minutes, timezone)  
-
+        date = convert_to_utc(hour, minutes, timezone)
         cat.dinner_time = date
         cat.dinner_time = cat.dinner_time.replace(tzinfo=None)
 
@@ -239,29 +215,10 @@ def do_update():
         cat.activity2 = activity2
 
     db.session.commit()
-    
-    # TODO this is dupe code from login route, factor out
-    user_time = cat.user.timezone
-    cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
-    cat.dinner_time = cat.dinner_time.astimezone(timezone(user_time))
-
-    time = [str(cat.dinner_time.hour), ":", str(cat.dinner_time.minute)]
-    time = parse_time("".join(time))
-    hour, minutes = time
-
-    ampm = am_or_pm(hour) # get whether am or pm
-    hour = make_12_hour_time(hour) # convert to 12 hour time
-
-    cat.dinner_time = cat.dinner_time.replace(hour=hour)
 
     flash("Successfully updated " + cat.name + "'s info!")
 
-    return render_template("main.html", name=cat.name, toy1=cat.toy1, 
-                                        toy2=cat.toy2, snack=cat.snack, 
-                                        activity1=cat.activity1,
-                                        activity2=cat.activity2, 
-                                        dinner_time=cat.dinner_time,
-                                        ampm=ampm)
+    return redirect("/main") 
 
 
 @app.route("/sms", methods=['POST'])
