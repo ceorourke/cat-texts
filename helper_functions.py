@@ -14,12 +14,24 @@ def parse_time(time):
 
     hour = int(time[:index])
     minutes = int(time[index+1:])
-
     times = []
     times.append(hour)
     times.append(minutes)
 
     return times
+
+def make_minutes(minutes):
+    """Formats minutes for proper time display"""
+
+    if len(str(minutes)) < 2:
+
+        new_minutes = "0"
+        new_minutes += str(minutes) 
+    else:
+        new_minutes = str(minutes)
+        minutes = make_minutes(minutes)
+
+    return new_minutes
 
 def make_24_hour_time(ampm, hour):
     """Convert 12 hour time to 24 hour time"""
