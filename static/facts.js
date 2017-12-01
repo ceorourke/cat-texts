@@ -1,7 +1,0 @@
-"use strict";
-
-function getName(evt){
-    evt.preventDefault()
-    $.get('/welcome');
-}
-$('#cat-btn').on('click', getName);

@@ -29,18 +29,13 @@
                placeholder="7:00" required 
                pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"> 
         <input type="radio" name="ampm" id="ampm" value="am">am
-        <input type="radio" name="ampm" id="ampm" value="pm">pm </br></br>
+        <input type="radio" name="ampm" id="ampm" value="pm" checked="checked">pm</br></br>
         Your timezone: 
           <select name="timezone" required>
           {% for zone in timezones %}
             <option value={{ zone }}>{{ zone }} </option>
             {% endfor %}
-          </select>
-        </br></br>
-
-
-
-  <!-- <input type="time" name="usr_time"> -->
+          </select></br></br>
         Your cat's favorite snack:
         <input type="text" name="cat-snack" id="cat-snack"
                placeholder="tuna" required maxlength="20"></br></br>
