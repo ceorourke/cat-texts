@@ -31,12 +31,15 @@ def job():
     print("I'm running on thread %s" % threading.current_thread())
     print name
 
-def run_threaded(job_func):
-    job_thread = threading.Thread(target=job_func)
-    job_thread.start()
+# def run_threaded(job_func):
+#     job_thread = threading.Thread(target=job_func)
+#     job_thread.start()
+  
 
 if __name__ == "__main__":
     connect_to_db(app)
+
+    thread_hash = {}
 
     for cat in Cat.query.all():
         dinner_time = cat.dinner_time
@@ -54,14 +57,20 @@ if __name__ == "__main__":
         print phone_number
       
         # schedule.every().day.at(this_time).do(daily_text)
-
         # schedule.every().day.at(this_time).do(run_threaded, daily_text)
-        schedule.every(5).seconds.do(run_threaded, job)
+        # schedule.every(5).seconds.do(job)
 
+        thread_hash[cat] = threading.Thread(target=job)
+        thread_hash[cat].start()
 
         while 1:
             schedule.run_pending()
             time.sleep(1)
+
+    for cat in Cat.query.all():
+        thread_hash[cat].join()
+
+
 
 
 
