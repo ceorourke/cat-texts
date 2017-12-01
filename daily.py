@@ -20,7 +20,7 @@ app = Flask(__name__)
 def daily_text():
 
     message = client.messages.create(
-    to=phone_number, 
+    to=phone_number,
     from_="+14138486585",
     # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
     body="Hi, " + name + " here. I'm pretty sure it's time to feed me!!")
@@ -31,12 +31,13 @@ def job():
     print("I'm running on thread %s" % threading.current_thread())
     print name
 
-def run_threaded(job_func):
-    job_thread = threading.Thread(target=job_func)
-    job_thread.start()
+#def run_threaded(job_func):
+#    job_thread = threading.Thread(target=job_func)
+#    job_thread.start()
 
 if __name__ == "__main__":
     connect_to_db(app)
+    thread_hash = {}
 
     for cat in Cat.query.all():
         dinner_time = cat.dinner_time
@@ -49,26 +50,19 @@ if __name__ == "__main__":
         name = cat.name
         phone_number = cat.user.phone_number
 
-        print this_time 
+        print this_time
         print name
         print phone_number
-      
+
         # schedule.every().day.at(this_time).do(daily_text)
 
         # schedule.every().day.at(this_time).do(run_threaded, daily_text)
-        schedule.every(5).seconds.do(run_threaded, job)
-
+        thread_hash[cat] = threading.Thread(target=job)
+        job_thread.start()
 
         while 1:
             schedule.run_pending()
             time.sleep(1)
 
-
-
-
-
-
-
-
-
-
+    for cat in Cat.query.all():
+        thread_hash[cat].join()
