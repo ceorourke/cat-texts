@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
         # schedule.every().day.at(this_time).do(run_threaded, daily_text)
         thread_hash[cat] = threading.Thread(target=job)
-        job_thread.start()
+        thread_hash[cat].start()
 
         while 1:
             schedule.run_pending()
