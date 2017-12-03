@@ -1,18 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title %}Cats!!!{% endblock %}
+{% block title %}Welcome!{% endblock %}
 
 {% block content %}
+<h1>Login or <a href="/register">Register</a></h1><br/>
 
-<center>
-</br></br></br></br></br></br>
-  <h1>Login or <a href="/register">Register</a></h1><br/>
-    <div id="login">
-      <form action="/login" method="POST">
-        <span> Email: <br/><input type="email" name="email"></span></br>
-        <span>Password: <br/><input type="password" name="password"></span></br><br/>
-        <input type="submit" id="cat-btn" class="cat-btn" value="Login">
-      </form>
+  <div class="row">
+
+    <div class="col-xs-12 col-md-8">
+      <img src="/static/img/cupcake.png" align="right" alt="Cupcake">
+
+      <h2>Welcome!</h2>
+      <p>Do you not get many texts?</p>
+      <p>Do you love your cat too much?</p>
+      <p>Do you want to text your cat..?</p>
+
     </div>
-</center>
+
+    <div class="col-xs-12 col-md-4">
+        <form method="POST" action="/login">
+          <div class="form-group">
+            <label for="field-name">Email</label>
+            <input id="email" class="form-control" type="text" name="email">
+          </div>
+          <div class="form-group">
+            <label for="field-password">Password</label>
+            <input id="password" class="form-control" type="password" name="password">
+          </div>
+          <div class="form-group">
+            <center>
+            <input type="submit" value="Text me!" class="btn btn-primary"></center>
+          </div>
+        </form>
+
+    </div>
+
+  </div>
+
 {% endblock %}
