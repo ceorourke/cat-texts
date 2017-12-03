@@ -29,12 +29,7 @@ def daily_text():
 
 def job():
     print("I'm running on thread %s" % threading.current_thread())
-    print name
-
-# def run_threaded(job_func):
-#     job_thread = threading.Thread(target=job_func)
-#     job_thread.start()
-  
+    print name  
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -57,7 +52,6 @@ if __name__ == "__main__":
         print phone_number
       
         # schedule.every().day.at(this_time).do(daily_text)
-        # schedule.every().day.at(this_time).do(run_threaded, daily_text)
         # schedule.every(5).seconds.do(job)
 
         thread_hash[cat] = threading.Thread(target=job)
@@ -69,6 +63,7 @@ if __name__ == "__main__":
 
     for cat in Cat.query.all():
         thread_hash[cat].join()
+
 
 
 

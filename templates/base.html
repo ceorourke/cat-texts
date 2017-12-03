@@ -1,40 +1,30 @@
 <!doctype html>
 <html>
-  <head>
-    <script src="https://use.fontawesome.com/7d51073c03.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Julius+Sans+One" rel="stylesheet">
+<head>
+  <title>{% block title %}TITLE HERE{% endblock %}</title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
     <script src="http://code.jquery.com/jquery.js"></script>
-    <!-- // <script src="/static/facts.js"></script> -->
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/static/css/cattexts.css">
+</head>
+<body>
+<div class="container">
+<!--   <h1>
+    <a href="/">It&rsquo;s My Party!</a>
+  </h1> -->
+<!--   {% for msg in get_flashed_messages() %}
+    <div class="alert alert-info">{{ msg }}</div>
+  {% endfor %} -->
 
-    <title>{% block title %}TITLE HERE{% endblock %}</title>
+  {% block content %}CONTENT HERE{% endblock %}
+</div>
 
-    <style>
-      body {
-        font-family: 'Arial', sans-serif;
-        background-image: url("/static/img/spiration-light.png");
-        background-position: center;
-    }
-      h1, h2, h3 {
-      font-family: 'Julius Sans One', sans-serif;
-      }
-      .cat-btn {
-        background-color: #008CBA;
-        font-family: 'Julius Sans One', sans-serif;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        display: inline-block;
-        font-size: 16px;
-    }
-    </style>
-  </head>
-  <body>
-
-  {% for message in get_flashed_messages() %}
-    {{ message }}
-  {% endfor %}
-
-    {% block content %} CONTENT HERE {% endblock %}
-  </body>
+</body>
 </html>

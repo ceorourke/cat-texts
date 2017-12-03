@@ -5,10 +5,14 @@
 {% block content %}
 
 <div style="text-align: center;">
-  </br></br></br><h1>Cat Texts!</h1>
-    <i class="fa fa-paw" aria-hidden="true"></i></br></br>
+<h1>Cat Texts!</h1>
+    <i class="fa fa-paw" aria-hidden="true"></i>
 
     <div style="display: inline-block; text-align: left;">
+
+        {% for msg in get_flashed_messages() %}
+    <div class="alert alert-info">{{ msg }}</div>
+  {% endfor %}
 
       Here is your cat's current info: </br></br>
 
