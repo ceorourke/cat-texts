@@ -20,14 +20,24 @@ h1 {
     padding-top:  0.8em;
     text-align: center;
     font-size: 3em;
-    background: pink no-repeat right;
+    background: #33D2FF no-repeat right;
     background-size: 220px 210px;
     margin-top: 0;
-    margin-left:-200px;
-    margin-right:-200px;
+    margin-left:-150px;
+    margin-right:-150px;
 }
-.dropdown-menu li{
-   font-family:'Lobster';
-   font-size:16px
-   !important;
+.cat-info {
+        font-family: 'Lobster', sans-serif;
+        font-weight: normal;
+        padding-top:0px;
+        margin-top: 0px;
+}
+.alert {
+    text-align: center;
+    font-size:15px;
+}
+.btn{
+    background: #4D7885 no-repeat right;
+    
+    !important;
 }

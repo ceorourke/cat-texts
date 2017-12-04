@@ -4,13 +4,18 @@
 
 {% block content %}
 <div>
-<center></br></br></br><h1>Thanks for signing up for Cat Texts!</h1>
-  <i class="fa fa-paw" aria-hidden="true"></i></br></br>
-  You'll receive an initial text shortly,
-  try saying "hey" or "bye" or anything else to get started. </br></br>
-  You'll also receive a daily reminder at dinner time! </br></br>
+    <h1>Thanks for signing up for Cat Texts!</h1>
 
-<form action="/main" method="GET">
-<input type="submit" id="cat-btn" class="cat-btn" value="Continue">
+    <p>You'll receive an initial text shortly, try saying "hey" or "bye" 
+       or anything else to get started.</p>
+    <p>You'll also receive a daily reminder at dinner time!</p>
+
+    <form action="/main" method="GET">
+      <div class="form-group">
+        <input type="submit" id="cat-btn" value="Continue!" 
+               class="btn btn-primary btn-lg">
+      </div>
+    </form>
+
 </div>
 {% endblock %}
