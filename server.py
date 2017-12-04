@@ -33,9 +33,12 @@ def login():
     password = request.form.get("password")
     password = password.encode('utf-8')
 
-    hashed = bcrypt.hashpw(password, bcrypt.gensalt())
-
     existing_email = User.query.filter_by(email=email).first()
+
+    user = User.query.filter_by(email=email).first()
+    if user:
+        hashed = user.password
+        hashed = hashed.encode('utf-8')
 
     if existing_email is not None and bcrypt.checkpw(password, hashed):
         # add user to session

@@ -13,6 +13,7 @@ th {
 
 body {
     font-size: 2em;
+    background-color: #EFEFEF;
 }
 
 h1 {
@@ -20,7 +21,7 @@ h1 {
     padding-top:  0.8em;
     text-align: center;
     font-size: 3em;
-    background: #33D2FF no-repeat right;
+    background: pink no-repeat right;
     background-size: 220px 210px;
     margin-top: 0;
     margin-left:-150px;
@@ -31,13 +32,13 @@ h1 {
         font-weight: normal;
         padding-top:0px;
         margin-top: 0px;
+        font-size: 25px;
 }
 .alert {
     text-align: center;
     font-size:15px;
 }
 .btn{
-    background: #4D7885 no-repeat right;
-    
+    background: #9099A2 no-repeat right;
     !important;
 }
