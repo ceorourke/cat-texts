@@ -4,34 +4,43 @@
 
 {% block content %}
 
-<div style="text-align: center;">
 <h1>Cat Texts!</h1>
-    <i class="fa fa-paw" aria-hidden="true"></i>
 
-    <div style="display: inline-block; text-align: left;">
-
-        {% for msg in get_flashed_messages() %}
-    <div class="alert alert-info">{{ msg }}</div>
+  {% for msg in get_flashed_messages() %}
+    <div class="alert alert-info alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" 
+            aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    {{ msg }}
+    </div>
   {% endfor %}
 
-      Here is your cat's current info: </br></br>
+<div style="text-align: center;">
+  <div style="display: inline-block; text-align: left;">
 
-      <b>Name:</b> {{ name }} </br>
-      <b>Dinner Time: </b> {{ hour }}:{{ minutes }} {{ ampm }} </br>
-      <b>Favorite Snack: </b> {{ snack }} </br>
-      <b>Favorite Activity: </b> {{ activity1 }} </br>
-      <b>2nd Favorite Activity: </b> {{ activity2 }} </br>
-      <b>Favorite toy: </b> {{ toy1 }} </br>
-      <b>2nd Favorite toy: </b> {{ toy2 }} </br></br></br>
+    Your cat's current info: </br></br>
+
+    <b class="cat-info">Name:</b> {{ name }} </br>
+    <b class="cat-info">Dinner Time: </b> {{ hour }}:{{ minutes }} {{ ampm }} </br>
+    <b class="cat-info">Favorite Snack: </b> {{ snack }} </br>
+    <b class="cat-info">Favorite Activity: </b> {{ activity1 }} </br>
+    <b class="cat-info">2nd Favorite Activity: </b> {{ activity2 }} </br>
+    <b class="cat-info">Favorite toy: </b> {{ toy1 }} </br>
+    <b class="cat-info">2nd Favorite toy: </b> {{ toy2 }} </br></br>
+  </div>
+
+  <form action="/update" method="GET">
+    <div class="form-group">
+      <input type="submit" id="cat-btn" value="Update Cat Info!" 
+             class="btn btn-primary btn-lg">
     </div>
-
-    <form action="/update" method="GET">
-      <input type="submit" id="cat-btn" class="cat-btn" value="Update Cat Info!">
-    </form> </br>
-
-    <form action="/logout" method="GET">
-      <input type="submit" id="cat-btn" class="cat-btn" value="Logout!">
-    </form>
+  </form> 
+  <form action="/logout" method="GET">
+    <div class="form-group">
+      <input type="submit" id="cat-btn" value="Logout!" 
+             class="btn btn-primary btn-lg">
+    </div>
+  </form>
 
 </div>  
 {% endblock %}
