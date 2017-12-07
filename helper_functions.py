@@ -21,16 +21,16 @@ def parse_time(time):
 
     return times
 
-def make_hour(hour):
-    """Formats hour for proper time display"""
+# def make_hour(hour):
+#     """Formats hour for proper time display"""
 
-    if len(str(hour)) < 2:
-        new_hour = "0"
-        new_hour += str(hour)
-    else:
-        new_hour = str(hour)
+#     if len(str(hour)) < 2:
+#         new_hour = "0"
+#         new_hour += str(hour)
+#     else:
+#         new_hour = str(hour)
 
-    return new_hour
+#     return new_hour
 
 def make_minutes(minutes):
     """Formats minutes for proper time display"""
@@ -77,9 +77,6 @@ def convert_to_utc(hour, minutes, user_timezone):
     date = datetime.now() # create a datetime object (in UTC time by default)
     utc = pytz.utc 
     date = date.replace(tzinfo=utc) # add utc timezone info
-
-    # TODO get the users' timezone rather than hardcoding PST conversion
-    # this_timezone = timezone('US/Pacific')
     this_timezone = timezone(user_timezone)
     date = date.astimezone(this_timezone)
 
