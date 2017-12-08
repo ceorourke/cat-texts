@@ -5,7 +5,7 @@ h4,
 h5,
 h6,
 th {
-        font-family: 'Lobster', sans-serif;
+        font-family: 'Pacifico', sans-serif;
         font-weight: normal;
         padding-top:0px;
         margin-top: 0px;
@@ -13,7 +13,8 @@ th {
 
 body {
     font-size: 2em;
-    background-color: #EFEFEF;
+    background-color: #EDFFFE;
+    font-family: 'Varela Round', sans-serif;
 }
 
 h1 {
@@ -21,14 +22,14 @@ h1 {
     padding-top:  0.8em;
     text-align: center;
     font-size: 3em;
-    background: pink no-repeat right;
+    background: #88D9E6 no-repeat right;
     background-size: 220px 210px;
     margin-top: 0;
     margin-left:-150px;
     margin-right:-150px;
 }
 .cat-info {
-        font-family: 'Lobster', sans-serif;
+        font-family: 'Pacifico', sans-serif;
         font-weight: normal;
         padding-top:0px;
         margin-top: 0px;
@@ -39,14 +40,18 @@ h1 {
     font-size:15px;
 }
 .btn{
-    background: #9099A2 no-repeat right;
+    background: #3C3744 no-repeat right;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 20px;
     !important;
 }
 p {
-    font-family: sans-serif;
     padding-top:10px;
     margin-top: 0px;
     font-size: 20px;
+    font-family: 'Varela Round', sans-serif;
+    font color: #BCE7FD;
+
 }
 #passwordText, 
 #emailStatus, 
