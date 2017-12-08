@@ -33,18 +33,6 @@
       </div>
   </div>
 
-<script>
-function replaceStatus(results) {
-  $('#emailStatus').html(results);
-}
-
-function updateStatus() {
-  $.get('/email_in_use', {email: $('#email').val()}, replaceStatus);
-}
-
-$('#email').on('keyup', updateStatus);
-</script>
-
   <div class="col-xs-12 col-sm-offset-2 col-sm-4 col-md-4">
       <div class="form-group">
         <label class="control-label" for="field-password">Password</label>
@@ -71,33 +59,6 @@ $('#email').on('keyup', updateStatus);
   </div>
 
 </div>
-
-<script>
-$('#password').on('keyup', function () {
-  if ($('#password').val().length < 6) {
-    $('#passwordStrength').removeClass("has-success");
-    $('#passwordStrength').addClass("has-error");
-    $('#passwordText').html("Password must be at least 6 characters.");
-  } else {
-    $('#passwordText').html("");  
-    $('#passwordStrength').removeClass("has-error");
-    $('#passwordStrength').addClass("has-success");  
-  }
-});
-</script>
-
-<script>
-$('#password, #confirm-password').on('keyup', function () {
-  if ($('#password').val() === $('#confirm-password').val()) {
-    $('#confirmpw').removeClass("has-error");
-    $('#confirmpw').addClass("has-success");
-  } else {
-    $('#confirmpw').removeClass("has-success");
-    $('#confirmpw').addClass("has-error");
-  } 
-});
-</script>
-
 
 </br></br>
 
@@ -210,4 +171,6 @@ $('#password, #confirm-password').on('keyup', function () {
   </div>
 </form>
 </div>
+
+<script src="/static/registration.js"></script>
 {% endblock %}
