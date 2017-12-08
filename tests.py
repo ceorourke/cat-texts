@@ -45,6 +45,7 @@ class ServerTestsWithSession(unittest.TestCase):
         self.assertIn("Your cat's current info:", result.data)
         self.assertIn('Hellboy', result.data)
         self.assertIn('tuna', result.data)
+        self.assertIn('meowing', result.data)
 
     def test_login_fail_pw(self):
         """Can we reject a user with the wrong password?"""

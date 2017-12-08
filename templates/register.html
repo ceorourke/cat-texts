@@ -8,33 +8,74 @@
 <div class="container">
   <div class="col-xs-12 col-sm-offset-1 col-sm-4 col-md-offset-1 col-md-4
               col-lg-offset-1 col-lg-4">
-    <form method="POST" action="/register">
+    <form data-toggle="validator" role="form" method="POST" action="/register">
       <div class="form-group">
-        <label for="field-name">Phone Number</label>
+        <label class="control-label" for="field-name">Phone Number</label>
+        <div class="input-group">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+          </div>
         <input id="phone" class="form-control" type="text" name="phone"
                pattern="^\d{3}-\d{3}-\d{4}$"
                placeholder="415-123-4567" required>
       </div>
+    </div>
       <div class="form-group">
-        <label for="field-email">Email</label>
+        <label class="control-label" for="field-email">Email</label>
+        <div class="input-group">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+          </div>
         <input id="email" class="form-control" type="text" name="email"
                placeholder="cats@gmail.com" required maxlength="50">
+        </div>
       </div>
   </div>
 
   <div class="col-xs-12 col-sm-offset-2 col-sm-4 col-md-4">
       <div class="form-group">
-        <label for="field-password">Password</label>
+        <label class="control-label" for="field-password">Password</label>
+        <div class="input-group">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+          </div>
         <input id="password" class="form-control" type="password" name="password"
                placeholder="**********" required>
       </div>
+    </div>
       <div class="form-group">
-        <label for="field-password">Confirm Password</label>
-        <input id="password" class="form-control" type="password" name="password"
+        <label class="control-label" for="confirm-password">Confirm Password</label>
+        <div id="confirmpw" class="input-group">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+          </div>
+        <input id="confirm-password" class="form-control" type="password" 
+               name="confirm-password"
                placeholder="**********" required>
       </div>
+    </div>
   </div>
+
 </div>
+
+<script>
+$('#password, #confirm-password').on('keyup', function () {
+  if ($('#password').val() == $('#confirm-password').val()) {
+    console.log("it matches");
+    if ($('#confirmpw').hasClass("has-error")) {
+      $('#confirmpw').removeClass("has-error");
+    }
+    $('#confirmpw').addClass("has-success");
+  } else 
+    console.log("not a match");
+    if ($('#confirmpw').hasClass("has-success")) {
+      $('#confirmpw').removeClass("has-success");
+    }
+    $('#confirmpw').addClass("has-error");
+
+});
+</script>
+
 
 </br></br>
 
