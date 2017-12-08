@@ -42,3 +42,9 @@ h1 {
     background: #9099A2 no-repeat right;
     !important;
 }
+p {
+    font-family: sans-serif;
+    padding-top:10px;
+    margin-top: 0px;
+    font-size: 20px;
+}

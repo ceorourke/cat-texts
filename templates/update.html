@@ -10,56 +10,100 @@
               col-lg-offset-1 col-lg-4">
     <form method="POST" action="/update">
     <div class="form-group">
-      <label for="field-cat-name">Cat's name</label>
+      <label class="control-label" for="field-cat-name">Cat's name</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="fa fa-paw" aria-hidden="true"></span>
+        </div>
       <input id="cat-name" class="form-control" type="text" name="cat-name"
              placeholder="Hellboy" maxlength="20">
+      </div>
     </div>
+
     <div class="form-group">
-      <label for="field-dinner-time">Cat's dinner time</label>
+      <label class="control-label" for="field-email">Cat's dinner time</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+        </div>
       <input id="dinner-time" class="form-control" type="text" name="dinner-time"
-             placeholder="7:00" 
+             placeholder="7:00"  
              pattern="^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$">
-      <input type="radio" name="ampm" id="ampm" value="am">&nbsp am
-      <input type="radio" name="ampm" id="ampm" value="pm" 
-             checked="checked">&nbsp pm
+      </div>
+        <input type="radio" name="ampm" id="ampm" value="am">&nbsp am
+       <input type="radio" name="ampm" id="ampm" value="pm" 
+              checked="checked">&nbsp pm
     </div>
+
     <div class="form-group">
-      <label for="timezone">Timezone</label>
-      <select class="form-control" id="timezone" name="timezone" required>
-          {% for zone in timezones %}
-            <option value={{ zone }}>{{ zone }}</option>
-          {% endfor %}
+      <label class="control-label" for="timezone">Timezone</label>
+      <div class="input-group">
+      <div class="input-group-addon">
+      <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+      </div>
+      <select class="form-control" id="timezone" name="timezone">
+      {% for zone in timezones %}
+        <option value={{ zone }}>{{ zone }}</option>
+      {% endfor %}
       </select>
+      </div>
     </div>
+
     <div class="form-group">
-      <label for="field-cat-snack">Cat's favorite snack</label>
-      <input id="cat-snack" class="form-control" type="text" name="cat-snack"
-             placeholder="tuna" maxlength="20">
+      <label class="control-label" for="field-cat-snack">Cat's favorite snack</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="fa fa-birthday-cake" aria-hidden="true"></span>
+        </div>
+        <input id="cat-snack" class="form-control" type="text" name="cat-snack"
+               placeholder="tuna" maxlength="20">
+      </div>
     </div>
   </div>
+
   <div class="col-xs-12 col-sm-offset-2 col-sm-4 col-md-4">
     <div class="form-group">
-      <label for="field-cat-activity">Cat's favorite activity</label>
+      <label class="control-label" for="field-cat-activity">Cat's favorite activity</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="fa fa-heart-o" aria-hidden="true"></span>
+        </div>
       <input id="cat-activity" class="form-control" type="text" 
              name="cat-activity"
-             placeholder="meowing all night" 
-             maxlength="20">
+             placeholder="meowing all night" maxlength="20">
+      </div>
     </div>
     <div class="form-group">
-      <label for="field-cat-activity2">Cat's 2nd favorite activity</label>
+      <label class="control-label" for="field-cat-activity2">Cat's 2nd favorite activity</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="fa fa-heart-o" aria-hidden="true"></span>
+        </div>
       <input id="cat-activity2" class="form-control" type="text" 
              name="cat-activity2"
              placeholder="sleeping" maxlength="20">
-    </div></br>
+      </div>
+    </div>
+  </br>
     <div class="form-group">
-      <label for="field-cat-toy">Cat's favorite toy</label>
+      <label class="control-label" for="field-cat-toy">Cat's favorite toy</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="fa fa-futbol-o" aria-hidden="true"></span>
+        </div>
       <input id="cat-toy" class="form-control" type="text" name="cat-toy"
              placeholder="space ball" maxlength="20">
+      </div>
     </div>
     <div class="form-group">
-      <label for="field-cat-toy2">Cat's 2nd favorite toy</label>
+      <label class="control-label" for="field-cat-toy2">Cat's 2nd favorite toy</label>
+      <div class="input-group">
+        <div class="input-group-addon">
+          <span class="fa fa-futbol-o" aria-hidden="true"></span>
+        </div>
       <input id="cat-toy2" class="form-control" type="text" name="cat-toy2"
              placeholder="catnip carrot" maxlength="20">
+      </div>
     </div>
   </div>
 </div>
