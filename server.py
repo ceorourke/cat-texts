@@ -38,6 +38,9 @@ def get_email_existence():
 @app.route('/password_correctness.json')
 def check_password():
     """Check if user's password is correct, send data back to page"""
+
+    # it's a bit redundant to check on the front AND back end ... need to think about this
+
     email = request.args.get("email")
     password = request.args.get("password")
     password = password.encode('utf-8')
@@ -50,10 +53,6 @@ def check_password():
         hashed = hashed.encode('utf-8')
 
     if existing_email is not None and bcrypt.checkpw(password, hashed):
-        # add user to session
-        session["user_id"] = existing_email.user_id
-        user_id = session["user_id"]
-
         return ""
     else:
         return "Incorrect password."
