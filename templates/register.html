@@ -4,9 +4,6 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
-
-
 <h1>Register for Cat Texts! </h1>
 <div class="container">
   <div class="col-xs-12 col-sm-offset-1 col-sm-4 col-md-offset-1 col-md-4
@@ -38,13 +35,14 @@
   <div class="col-xs-12 col-sm-offset-2 col-sm-4 col-md-4">
       <div class="form-group">
         <label class="control-label" for="field-password">Password</label>
-        <div class="input-group">
+        <div id="passwordStrength" class="input-group">
           <div class="input-group-addon">
             <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
           </div>
         <input id="password" class="form-control" type="password" name="password"
-               placeholder="**********" required>
+               placeholder="**********" pattern=".{6,}" required>
       </div>
+      <div id='passwordText'></div>
     </div>
       <div class="form-group">
         <label class="control-label" for="confirm-password">Confirm Password</label>
@@ -62,13 +60,25 @@
 </div>
 
 <script>
+$('#password').on('keyup', function () {
+  if ($('#password').val().length < 6) {
+    $('#passwordStrength').removeClass("has-success");
+    $('#passwordStrength').addClass("has-error");
+    $('#passwordText').html("Password must be at least 6 characters.");
+  } else {
+    $('#passwordText').html("");  
+    $('#passwordStrength').removeClass("has-error");
+    $('#passwordStrength').addClass("has-success");  
+  }
+});
+</script>
+
+<script>
 $('#password, #confirm-password').on('keyup', function () {
   if ($('#password').val() === $('#confirm-password').val()) {
-    console.log("it matches");
     $('#confirmpw').removeClass("has-error");
     $('#confirmpw').addClass("has-success");
   } else {
-    console.log("not a match");
     $('#confirmpw').removeClass("has-success");
     $('#confirmpw').addClass("has-error");
   } 
@@ -108,7 +118,7 @@ $('#password, #confirm-password').on('keyup', function () {
     </div>
 
     <div class="form-group">
-      <label class="control-label" for="confirm-password">Timezone</label>
+      <label class="control-label" for="timezone">Timezone</label>
       <div class="input-group">
         <div class="input-group-addon">
           <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
