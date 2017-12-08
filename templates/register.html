@@ -60,19 +60,15 @@
 
 <script>
 $('#password, #confirm-password').on('keyup', function () {
-  if ($('#password').val() == $('#confirm-password').val()) {
+  if ($('#password').val() === $('#confirm-password').val()) {
     console.log("it matches");
-    if ($('#confirmpw').hasClass("has-error")) {
-      $('#confirmpw').removeClass("has-error");
-    }
+    $('#confirmpw').removeClass("has-error");
     $('#confirmpw').addClass("has-success");
-  } else 
+  } else {
     console.log("not a match");
-    if ($('#confirmpw').hasClass("has-success")) {
-      $('#confirmpw').removeClass("has-success");
-    }
+    $('#confirmpw').removeClass("has-success");
     $('#confirmpw').addClass("has-error");
-
+  }
 });
 </script>
 
