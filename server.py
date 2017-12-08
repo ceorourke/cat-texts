@@ -137,7 +137,6 @@ def register_process():
 
     else:
         flash("Email already in use")
-        # TODO probably handle this in AJAX on the form
 
     return redirect("/")
 
