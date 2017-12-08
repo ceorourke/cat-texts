@@ -21,16 +21,6 @@ def parse_time(time):
 
     return times
 
-# def make_hour(hour):
-#     """Formats hour for proper time display"""
-
-#     if len(str(hour)) < 2:
-#         new_hour = "0"
-#         new_hour += str(hour)
-#     else:
-#         new_hour = str(hour)
-
-#     return new_hour
 
 def make_minutes(minutes):
     """Formats minutes for proper time display"""
