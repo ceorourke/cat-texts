@@ -24,6 +24,40 @@ def main():
 
     return render_template("home.html")
 
+@app.route('/email_exists.json')
+def get_email_existence():
+    """Check if an email is valid, send data back to page"""
+
+    email = request.args.get("email")
+
+    if User.query.filter_by(email=email).first():
+        return ""
+    else:
+        return "Email not in database. Register or try again."
+
+@app.route('/password_correctness.json')
+def check_password():
+    """Check if user's password is correct, send data back to page"""
+    email = request.args.get("email")
+    password = request.args.get("password")
+    password = password.encode('utf-8')
+
+    existing_email = User.query.filter_by(email=email).first()
+
+    user = User.query.filter_by(email=email).first()
+    if user:
+        hashed = user.password
+        hashed = hashed.encode('utf-8')
+
+    if existing_email is not None and bcrypt.checkpw(password, hashed):
+        # add user to session
+        session["user_id"] = existing_email.user_id
+        user_id = session["user_id"]
+
+        return ""
+    else:
+        return "Incorrect password."
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -85,7 +119,7 @@ def register_process():
     password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     phone = request.form.get("phone")
-    country_code = '+1'
+    country_code = '+1' # US country code
     phone = ''.join(num for num in phone if num not in '-')
     phone = country_code + phone
 
