@@ -29,8 +29,21 @@
         <input id="email" class="form-control" type="text" name="email"
                placeholder="cats@gmail.com" required maxlength="50">
         </div>
+        <div id='emailStatus'></div>
       </div>
   </div>
+
+<script>
+function replaceStatus(results) {
+  $('#emailStatus').html(results);
+}
+
+function updateStatus() {
+  $.get('/email_in_use', {email: $('#email').val()}, replaceStatus);
+}
+
+$('#email').on('keyup', updateStatus);
+</script>
 
   <div class="col-xs-12 col-sm-offset-2 col-sm-4 col-md-4">
       <div class="form-group">

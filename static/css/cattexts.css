@@ -48,6 +48,6 @@ p {
     margin-top: 0px;
     font-size: 20px;
 }
-#passwordText {
-    font-size: 15px;   
+#passwordText, #emailStatus {
+    font-size: 12px;   
 }

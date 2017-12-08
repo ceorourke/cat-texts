@@ -141,6 +141,16 @@ def register_process():
 
     return redirect("/")
 
+@app.route('/email_in_use')
+def get_email_status():
+    """Check if an email is in use or not"""
+
+    email = request.args.get("email")
+
+    if User.query.filter_by(email=email).first():
+        return "Email is already in use"
+    return ""
+
 
 @app.route("/main")
 def main_page():
