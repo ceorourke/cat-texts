@@ -1,10 +1,9 @@
 from flask import Flask, request, redirect, render_template
-# from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 import os
-from functools import partial
+import time 
 import schedule
-import time
+from functools import partial
 from model import connect_to_db, db, User, Cat
 from helper_functions import make_minutes, make_hour
 
@@ -28,15 +27,14 @@ def daily_text(name, phone_number):
     print(message.sid)
 
 def job(name):
-    #print("I'm running on thread %s" % threading.current_thread())
+    """Test functionality""" 
+
     print "RUNNING JOB -----------------"
     print name
     print "-----------------------------"
 
-if __name__ == "__main__":
-    connect_to_db(app)
-
-    thread_hash = {}
+def schedule_texts():
+    """Schedule texts every day for each cat"""
 
     for cat in Cat.query.all():
         dinner_time = cat.dinner_time
@@ -49,26 +47,22 @@ if __name__ == "__main__":
         name = cat.name
         phone_number = cat.user.phone_number
 
-
         bound_f = partial(daily_text, name, phone_number)
       
         print "SCHEDULING JOB -----------"
         print name
         print "---------------------------"
+
         schedule.every().day.at(this_time).do(bound_f)
 
     while 1:
         schedule.run_pending()
         time.sleep(1)
 
+if __name__ == "__main__":
+    connect_to_db(app)
 
-
-
-
-
-
-
-
+    
 
 
 

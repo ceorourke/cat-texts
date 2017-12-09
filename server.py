@@ -1,14 +1,23 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from jinja2 import StrictUndefined
 from model import connect_to_db, db, User, Cat
+from daily import *
 from helper_functions import *
 from pytz import timezone
 import pytz
 import random
 import bcrypt
+from functools import partial
 import os
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
+
+# import time 
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.triggers.cron import CronTrigger
+
 # Your Account SID from twilio.com/console
 account_sid = os.environ.get("account_sid")
 # Your Auth Token from twilio.com/console
@@ -17,6 +26,9 @@ client = Client(account_sid, auth_token)
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 ################################################################################
+scheduler = BackgroundScheduler()
+scheduler.start()
+
 
 @app.route("/")
 def main():
@@ -157,6 +169,18 @@ def register_process():
         db.session.add(new_cat)
         db.session.commit()
 
+        bound_f = partial(daily_text, name, phone)
+
+        print "*******************"
+        print current_user
+
+        scheduler.add_job(
+            func=bound_f,
+            trigger=CronTrigger(hour=date.hour, minute=date.minute),
+            id=str(current_user), # if expanding to allow for multiple cats, change this
+            # name="Job for " + current_user + ". Sending text at " + date.hour + ":" + date.minute,
+            replace_existing=False)
+
         message = client.messages.create(
         to=phone, 
         from_="+14138486585",
@@ -265,9 +289,31 @@ def do_update():
 
     db.session.commit()
 
+    if dinner_time:
+        name = cat.name
+        phone_number = cat.user.phone_number
+
+        bound_f = partial(daily_text, name, phone_number)
+
+        scheduler.add_job(
+        func=bound_f,
+        trigger=CronTrigger(hour=date.hour, minute=date.minute),
+        id=str(user_id), # if expanding to allow for multiple cats, change this
+        replace_existing=True)
+
     flash("Successfully updated " + cat.name + "'s info!")
 
     return redirect("/main") 
+
+def daily_text(name, phone_number):
+
+    message = client.messages.create(
+    to=phone_number, 
+    from_="+14138486585",
+    # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
+    body="Hi, " + name + " here. I'm pretty sure it's time to feed me!!")
+
+    print(message.sid)
 
 
 @app.route("/sms", methods=['POST'])
@@ -292,7 +338,6 @@ def incoming_sms():
     # Start our TwiML response
     resp = MessagingResponse()
 
-    # Determine the right reply for this message
     # TODO make more of these! it'll be more fun for the user
     if (body == 'hey') or (body == 'Hey'):
         resp.message("Hi! Where's my " + cat.snack + "?!")
@@ -315,4 +360,4 @@ if __name__ == "__main__":
 
     app.run(port=5000, host='0.0.0.0')
 
-
+    atexit.register(lambda: scheduler.shutdown())
