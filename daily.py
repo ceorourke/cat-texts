@@ -2,7 +2,7 @@ from flask import Flask, request, redirect, render_template
 # from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 import os
-import threading
+from functools import partial
 import schedule
 import time
 from model import connect_to_db, db, User, Cat
@@ -17,7 +17,7 @@ client = Client(account_sid, auth_token)
 app = Flask(__name__)
 ################################################################################
 
-def daily_text():
+def daily_text(name, phone_number):
 
     message = client.messages.create(
     to=phone_number, 
@@ -27,9 +27,11 @@ def daily_text():
 
     print(message.sid)
 
-def job():
-    print("I'm running on thread %s" % threading.current_thread())
-    print name  
+def job(name):
+    #print("I'm running on thread %s" % threading.current_thread())
+    print "RUNNING JOB -----------------"
+    print name
+    print "-----------------------------"
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -47,23 +49,17 @@ if __name__ == "__main__":
         name = cat.name
         phone_number = cat.user.phone_number
 
-        print this_time 
-        print name
-        print phone_number
+
+        bound_f = partial(daily_text, name, phone_number)
       
-        # schedule.every().day.at(this_time).do(daily_text)
-        # schedule.every(5).seconds.do(job)
+        print "SCHEDULING JOB -----------"
+        print name
+        print "---------------------------"
+        schedule.every().day.at(this_time).do(bound_f)
 
-        thread_hash[cat] = threading.Thread(target=job)
-        thread_hash[cat].start()
-
-        while 1:
-            schedule.run_pending()
-            time.sleep(1)
-
-    for cat in Cat.query.all():
-        thread_hash[cat].join()
-
+    while 1:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 
