@@ -3,59 +3,65 @@
 {% block title %}Welcome!{% endblock %}
 
 {% block content %}
+
+
 <h1>Login or <a href="/register">Register</a></h1><br/>
 
-<div class="row">
-  <div class="col-xs-12 col-sm-6  col-md-offset-1 col-md-5
-              col-lg-offset-1 col-lg-5">
+<div class="container-fluid">
+  <div class="row">
 
-      <h2>Welcome!</h2>
-      <p>Do you not get many texts?</p>
-      <p>Do you love your cat too much?</p>
-      <p>Do you want to text your cat..?</p>
+    <div class="col-xs-offset-2 col-xs-10 
+                col-sm-offset-1 col-sm-5
+                col-md-offset-2 col-md-4
+                col-lg-offset-3 col-lg-4">
+        <h2>Welcome!</h2>
+        <p>Do you not get many texts?</p>
+        <p>Do you love your cat too much?</p>
+        <p>Do you want to text your cat..?</p>
+    </div> <!-- end column -->
 
-  </div>
-
-  <div class="col-xs-8 col-sm-offset-2 col-sm-4 col-md-offset-2 col-md-4
-              col-lg-pull-1 col-lg-3">
-    <form method="POST" action="/login">
-      <div class="form-group">
-        <label class="control-label" for="field-email"><p>Email</p></label>
-        <div class="input-group">
-          <div class="input-group-addon">
-            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+    <div class="col-xs-offset-2 col-xs-8 
+                col-sm-offset-1 col-sm-4 
+                col-md-4
+                col-lg-pull-1 col-lg-3">
+      <form method="POST" action="/login">
+        <div class="form-group">
+          <label class="control-label" for="field-email"><p>Email</p></label>
+          <div class="input-group">
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+            </div>
+          <input id="email" class="form-control" type="text" name="email"
+                 placeholder="cats@gmail.com" required maxlength="50">
           </div>
-        <input id="email" class="form-control" type="text" name="email"
-               placeholder="cats@gmail.com" required maxlength="50">
         </div>
-      </div>
-      <div id="emailExistence"></div>
-      <div class="form-group">
-        <label class="control-label" for="field-password"><p>Password</p></label>
-        <div class="input-group">
-          <div class="input-group-addon">
-            <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+        <div id="emailExistence"></div>
+        <div class="form-group">
+          <label class="control-label" for="field-password"><p>Password</p></label>
+          <div class="input-group">
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </div>
+            <input id="password" class="form-control" type="password" name="password"
+                 placeholder="**********" required>
           </div>
-        <input id="password" class="form-control" type="password" name="password"
-               placeholder="**********" required>
-      </div>
-    </div>
-    <div id="passwordCorrectness"></div>
-      <div class="form-group">
-        <input type="submit" value="Text me!" class="btn btn-primary btn-block">
-      </div>
-    </form>
+        </div>
+        <div id="passwordCorrectness"></div>
+        <div class="form-group">
+          <input type="submit" value="Text me!" class="btn btn-primary btn-block">
+        </div>
+      </form>
+      {% for msg in get_flashed_messages() %}
+        <div class="alert alert-info alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" 
+                  aria-label="Close"><span aria-hidden="true">&times;</span>
+          </button>
+          {{ msg }}
+        </div>
+      {% endfor %}
 
-  {% for msg in get_flashed_messages() %}
-    <div class="alert alert-info alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" 
-            aria-label="Close"><span aria-hidden="true">&times;</span>
-    </button>
-    {{ msg }}
-    </div>
-  {% endfor %}
-
-  </div>
-</div>
+    </div> <!-- end column -->
+  </div> <!-- end row -->
+</div> <!-- end container -->
 <script src="/static/login.js"></script>
 {% endblock %}
