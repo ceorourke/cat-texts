@@ -290,6 +290,8 @@ def do_update():
     db.session.commit()
 
     if dinner_time:
+        print "**************"
+        print "here"
         name = cat.name
         phone_number = cat.user.phone_number
 

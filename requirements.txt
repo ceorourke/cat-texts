@@ -1,3 +1,4 @@
+APScheduler==3.4.0
 asn1crypto==0.22.0
 backports-abc==0.5
 backports.shutil-get-terminal-size==1.0.0
@@ -15,8 +16,10 @@ enum34==1.1.6
 Flask==0.10.1
 Flask-DebugToolbar==0.10.0
 Flask-SQLAlchemy==2.0
+funcsigs==1.0.2
 functools32==3.2.3.post2
 future==0.16.0
+futures==3.2.0
 gyp==0.1
 html5lib==0.999999999
 idna==2.5
@@ -63,6 +66,7 @@ testpath==0.3.1
 tornado==4.5.1
 traitlets==4.3.2
 twilio==6.6.3
+tzlocal==1.5
 urllib3==1.21.1
 virtualenv==15.0.1
 wcwidth==0.1.7
