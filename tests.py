@@ -32,6 +32,22 @@ class ServerTestsWithSession(unittest.TestCase):
         db.session.close()
         db.drop_all()
 
+    def test_update(self):
+        """Can we reach the update cat info page?"""
+
+        result = self.client.get("/update", follow_redirects=True)
+        self.assertIn("Update Cat Info!", result.data)
+
+
+    def test_do_update(self):
+        """Can we update some cat info?"""
+
+        result = self.client.post("/update", data={"cat-name": "Leoboi"}, 
+                                             follow_redirects=True)
+
+        self.assertIn("Successfully updated Leoboi&#39;s info!", result.data)
+
+
     def test_logout(self):
         """Can we log out a user that's been logged in?"""
 
@@ -95,39 +111,41 @@ class ServerTestsWithoutSession(unittest.TestCase):
         result = self.client.get("/register")
         self.assertIn('Register for Cat Texts!', result.data)
 
-    # def test_registration(self):
-    #     """Can we register a new user"""
+    def test_registration(self):
+        """Can we register a new user and reach the thanks page?"""
 
-    #     import bcrypt
-    #     time = "7:00"
-    #     password='imcute'
-    #     password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        import bcrypt
+        password='imcute'
+        password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-    #     result = self.client.post("/register", data={"phone": "413-329-3198",
-    #                                                  "email": "hellboy@cute.com", 
-    #                                                  "password": password,
-    #                                                  "user_id": "1",
-    #                                                  "name": "Hellboy",
-    #                                                  "time": time,
-    #                                                  "timezone": "US/Pacific",
-    #                                                  "ampm": "pm",
-    #                                                  "snack": "tuna",
-    #                                                  "activity1": "meowing",
-    #                                                  "activity2": "sleeping",
-    #                                                  "toy1": "space ball",
-    #                                                  "toy2": "catnip carrot"
-    #                                                  }, follow_redirects=True)
-    #     self.assertIn("/main", result.data)
+        result = self.client.post("/register", data={"phone": "413-329-3187",
+                                                     "email": "hellboy@cute.com", 
+                                                     "password": password,
+                                                     "user_id": "1",
+                                                     "cat-name": "Hellboy",
+                                                     "dinner-time": "7:00",
+                                                     "timezone": "US/Pacific",
+                                                     "ampm": "pm",
+                                                     "cat-snack": "tuna",
+                                                     "cat-activity": "meowing",
+                                                     "cat-activity2": "sleeping",
+                                                     "cat-toy": "space ball",
+                                                     "cat-toy2": "catnip carrot"
+                                                     }, follow_redirects=True)
+
+        self.assertIn("/main", result.data)
+        self.assertIn("You're now signed up for Cat Texts!", result.data)
 
 
-    # def test_login_success(self):
-    #     """Can we log in a registered user?"""
 
-    #     result = self.client.post("/login", data={"email": "hellboy@hellboy.com", 
-    #                                               "password": "hellboy",
-    #                                               }, follow_redirects=True)
-    #     self.assertIn("/login", result.data)
-    #     self.assertIn("Successfully logged in!", result.data)
+    def test_login_success(self):
+        """Can we log in a registered user?"""
+
+        result = self.client.post("/login", data={"email": "hellboy@hellboy.com", 
+                                                  "password": "hellboy",
+                                                  }, follow_redirects=True)
+        self.assertIn("/", result.data)
+        self.assertIn("Successfully logged in!", result.data)
 
 class HelperFunctionTexts(unittest.TestCase):
     """Tests all helper functions"""

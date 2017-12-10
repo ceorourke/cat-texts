@@ -29,8 +29,8 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 scheduler = BackgroundScheduler()
 scheduler.start()
 
-US_TIMEZONES = ['US/Alaska','US/Arizona','US/Central','US/Eastern',
-                'US/Hawaii','US/Mountain','US/Pacific']
+US_TIMEZONES = ['US/Pacific', 'US/Eastern', 'US/Alaska', 'US/Arizona',
+                'US/Central','US/Hawaii','US/Mountain',]
 
 
 @app.route("/")

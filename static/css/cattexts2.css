@@ -1,0 +1,81 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+th {
+        font-family: 'Pacifico', sans-serif;
+        font-weight: normal;
+        padding-top:0px;
+        margin-top: 0px;
+}
+
+body {
+    font-size: 2em;
+    background-color: #EDFFFE;
+    font-family: 'Varela Round', sans-serif;
+}
+
+.container {
+    padding: 0px 0px;
+     margin-right: 0px;
+     margin-left: 0px;
+     width: 100%;
+}
+
+#main {
+    font-family: 'Pacifico', sans-serif;
+    font-size: 3em;
+    height: 150px;
+    padding-top: 0.5em;
+    text-align: center;
+    background: #88D9E6;
+    width: 100%; 
+}
+
+h1 {
+    font-family: 'Pacifico', sans-serif;
+    font-size: 3em;
+    height: 150px;
+    border-radius: 0;
+    padding-top: 0.5em;
+    text-align: center;
+    background: #88D9E6
+}
+
+.cat-info {
+        font-family: 'Pacifico', sans-serif;
+        font-weight: normal;
+        text-align: center;
+        padding-top:0px;
+        margin-top: 0px;
+        font-size: 25px;
+}
+
+.alert {
+    text-align: center;
+    font-size:15px;
+}
+
+.btn{
+    background: #3C3744 no-repeat right;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 20px;
+    !important;
+}
+
+p {
+    padding-top:10px;
+    margin-top: 0px;
+    font-size: 20px;
+    font-family: 'Varela Round', sans-serif;
+    font color: #BCE7FD;
+}
+
+#passwordText, 
+#emailStatus, 
+#emailExistence, 
+#passwordCorrectness {
+    font-size: 12px;   
+}

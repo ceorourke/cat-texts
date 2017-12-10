@@ -65,11 +65,11 @@ def connect_to_db(app, location="postgres:///cattexts"):
 def example_data():
     """Load fake db with data for testing."""
 
-    password='hellboy"'
+    password='hellboy'
     password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     new_user = User(email="hellboy@hellboy.com", password=password,
-                    phone_number="413-329-3198", timezone="US/Pacific")
+                    phone_number="413-123-4567", timezone="US/Pacific")
     db.session.add(new_user)
 
     dinner_time="7:00"
