@@ -139,6 +139,12 @@ class HelperFunctionTexts(unittest.TestCase):
         time = "7:00"
         assert parse_time(time) == [7, 0]
 
+    def test_make_hour(self):
+        """Can we format hours properly for display?"""
+
+        hour = 5
+        assert make_hour(hour) == "05"
+
     def test_make_minutes(self):
         """Can we format minutes properly for display?"""
 
