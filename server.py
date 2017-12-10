@@ -29,6 +29,9 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 scheduler = BackgroundScheduler()
 scheduler.start()
 
+US_TIMEZONES = ['US/Alaska','US/Arizona','US/Central','US/Eastern',
+                'US/Hawaii','US/Mountain','US/Pacific']
+
 
 @app.route("/")
 def main():
@@ -114,11 +117,7 @@ def do_logout():
 def register():
     """Show registration form"""
 
-    timezones = pytz.common_timezones
-    tz = ['US/Pacific']
-    tz.extend(timezones)
-
-    return render_template("register.html", timezones=tz)
+    return render_template("register.html", timezones=US_TIMEZONES)
 
 @app.route("/register", methods=["GET", "POST"])
 def register_process():
@@ -241,11 +240,7 @@ def main_page():
 def show_update():
     """Show update page"""
 
-    timezones = pytz.common_timezones
-    tz = ['US/Pacific']
-    tz.extend(timezones)
-
-    return render_template("update.html", timezones=tz)
+    return render_template("update.html", timezones=US_TIMEZONES)
 
 
 @app.route("/update", methods=['POST'])
