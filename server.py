@@ -84,11 +84,14 @@ def login():
     existing_email = User.query.filter_by(email=email).first()
 
     user = User.query.filter_by(email=email).first()
+
     if user:
         hashed = user.password
         hashed = hashed.encode('utf-8')
 
-    if existing_email is not None and bcrypt.checkpw(password, hashed):
+    if (existing_email is not None and 
+        bcrypt.checkpw(password, hashed) and 
+        user.is_verified == True):
         # add user to session
         session["user_id"] = existing_email.user_id
         user_id = session["user_id"]
@@ -99,6 +102,9 @@ def login():
 
     elif existing_email is None:
         flash("Incorrect email.")
+        return redirect('/')
+    elif user.is_verified == False:
+        flash("Number not verified.")
         return redirect('/')
     else:
         flash("Incorrect password.")
