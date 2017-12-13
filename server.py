@@ -201,35 +201,25 @@ def register_process():
 
     return redirect("/")
 
+@app.route('/verification', methods=["POST"])
+def verify_phone_number():
+    """Mark user as verified"""
 
-# @app.route('/verification')
-# def show_verification_page():
-#     """Render verification page"""
+    user_id = session["user_id"]
+    cat = Cat.query.filter_by(user_id=user_id).first()
+    user = User.query.filter_by(user_id=user_id).first()
+    user.is_verified = True
 
-#     return render_template("verification.html")
+    db.session.commit()
 
-# @app.route('/verification', methods=["POST"])
-# def verify_phone_number():
-#     """Make sure user has entered correct phone number"""
+    message = client.messages.create(
+    to=user.phone_number, 
+    from_="+14138486585",
+    body="Hi, it's " + cat.name + ". I like " + cat.snack + "! Can't wait to text a lot!")
+    print(message.sid)
 
-#     # generate a 6 digit code
-#     code = ""
-#     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-#     while len(code) < 7:
-#         a_letter = random.choice(chars)
-#         code.append(a_letter)
-
-#     user_id = session["user_id"]
-#     user = User.query.filter_by(user_id=user_id).first()
-
-#     message = client.messages.create(
-#     to=user.phone, 
-#     from_="+14138486585",
-#     body=code)
-
-#     print(message.sid)
-
-#     return render_template("thanks.html")
+    flash("Successfully registered " + user.email + "!")
+    return render_template("thanks.html")
 
 
 @app.route('/email_in_use')
@@ -250,7 +240,6 @@ def main_page():
     user_id = session["user_id"]
     cat = Cat.query.filter_by(user_id=user_id).first()
 
-    # TODO maybe factor out, this all just formats the timezone for display
     user_time = cat.user.timezone
     cat.dinner_time = cat.dinner_time.replace(tzinfo=pytz.utc)
     cat.dinner_time = cat.dinner_time.astimezone(timezone(user_time))
