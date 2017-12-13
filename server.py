@@ -170,9 +170,6 @@ def register_process():
 
         bound_f = partial(daily_text, name, phone)
 
-        print "*******************"
-        print current_user
-
         scheduler.add_job(
             func=bound_f,
             trigger=CronTrigger(hour=date.hour, minute=date.minute),
@@ -180,37 +177,59 @@ def register_process():
             # name="Job for " + current_user + ". Sending text at " + date.hour + ":" + date.minute,
             replace_existing=False)
 
+
+        code = ""
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        while len(code) < 6:
+            a_letter = random.choice(chars)
+            code += a_letter
+
         message = client.messages.create(
         to=phone, 
         from_="+14138486585",
-        # media_url="https://static.pexels.com/photos/62321/kitten-cat-fluffy-cat-cute-62321.jpeg",
-        body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
-
+        # body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
+        body=code)
+        # probably change this to send the code
         print(message.sid)
 
-        flash("Successfully registered " + email + "!")
-        return render_template("verification.html")
+        # flash("Successfully registered " + email + "!")
+        return render_template("verification.html", code=code)
         # return render_template("thanks.html")
 
     else:
         flash("Email already in use")
 
     return redirect("/")
-    
-
-@app.route('/verification')
-def show_verification_page():
-    """Render verification page"""
-
-    return render_template("verification.html")
-
-@app.route('/verification', methods=["POST"])
-def verify_phone_number():
-    """Make sure user has entered correct phone number"""
 
 
+# @app.route('/verification')
+# def show_verification_page():
+#     """Render verification page"""
 
-    return render_template("thanks.html")
+#     return render_template("verification.html")
+
+# @app.route('/verification', methods=["POST"])
+# def verify_phone_number():
+#     """Make sure user has entered correct phone number"""
+
+#     # generate a 6 digit code
+#     code = ""
+#     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+#     while len(code) < 7:
+#         a_letter = random.choice(chars)
+#         code.append(a_letter)
+
+#     user_id = session["user_id"]
+#     user = User.query.filter_by(user_id=user_id).first()
+
+#     message = client.messages.create(
+#     to=user.phone, 
+#     from_="+14138486585",
+#     body=code)
+
+#     print(message.sid)
+
+#     return render_template("thanks.html")
 
 
 @app.route('/email_in_use')
