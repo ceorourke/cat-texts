@@ -189,12 +189,29 @@ def register_process():
         print(message.sid)
 
         flash("Successfully registered " + email + "!")
-        return render_template("thanks.html")
+        return render_template("verification.html")
+        # return render_template("thanks.html")
 
     else:
         flash("Email already in use")
 
     return redirect("/")
+    
+
+@app.route('/verification')
+def show_verification_page():
+    """Render verification page"""
+
+    return render_template("verification.html")
+
+@app.route('/verification', methods=["POST"])
+def verify_phone_number():
+    """Make sure user has entered correct phone number"""
+
+
+
+    return render_template("thanks.html")
+
 
 @app.route('/email_in_use')
 def get_email_status():
@@ -285,8 +302,6 @@ def do_update():
     db.session.commit()
 
     if dinner_time:
-        print "**************"
-        print "here"
         name = cat.name
         phone_number = cat.user.phone_number
 
@@ -326,20 +341,33 @@ def incoming_sms():
     snack_msg = "I'm hungry!! I want " + cat.snack + "!"
     activity1_msg = "Whachu up to? I'm busy " + cat.activity1 + "..."
     activity2_msg = "Me? I'm just " + cat.activity2 + "..."
-    # TODO make more messages! it's pretty repetitive right meow
+    msg1 = "I'm scared of the blender and the vacuum!"
+    msg2 = "I like being in small boxes."
+    msg3 = "Sometimes I like to tear through the apartment, meowing loudly."
+    msg4 = "It is a cat's duty to appear aloof at all times."
+    msg5 = "Got any catnip?"
+    msg6 = "I'M HUNGRY"
+    msg7 = "zzzzzZZZZZZZ"
+    msg8 = "mrrrowwwww"
+    msg9 = ".........."
 
-    cat_responses = [toy1_msg, toy2_msg, snack_msg, activity1_msg, activity2_msg]
+    cat_responses = [toy1_msg, toy2_msg, snack_msg, activity1_msg, activity2_msg,
+                     msg1, msg2, msg3, msg4, msg5, msg6, msg7, msg8, msg9]
+
 
     # Get the message the user sent our Twilio number
     body = request.values.get('Body', None)
     # Start our TwiML response
     resp = MessagingResponse()
 
-    # TODO make more of these! it'll be more fun for the user
-    if (body == 'hey') or (body == 'Hey'):
+    if (body == 'hey') or (body == 'Hey') or (body == 'Hi') or (body == 'hi'):
         resp.message("Hi! Where's my " + cat.snack + "?!")
     elif (body == 'bye') or (body == 'Bye'):
         resp.message("Bye? I'm just going to text you again later.")
+    elif (body == "sup?") or (body == "Sup?"):
+        resp.message("Sup? What year do you think it is right meow?")
+    elif (body == "I'm bored") or (body == "i'm bored"):
+        resp.message("You can borrow my " + toy1 + "for a bit if you want.")
     else:
         reply = random.choice(cat_responses)
         resp.message(reply)
