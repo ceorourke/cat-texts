@@ -40,19 +40,16 @@
 </div>
 
 <script>
+
 function checkCode(evt) {
-  evt.preventDefault();
   var realCode = $('#textCode').data(); // get code from hidden div
-  console.log(realCode);
   var userCode = $('#text-code').val(); // get user input
-  console.log(userCode);
-  if(realCode.name === userCode) { // compare each 
-    $('#codeCompare').html("");
-    $('#codeCompare').html("It matches, now I need to write code to handle that!");
-   } else {
+
+  if(realCode.name !== userCode) { // compare each 
+    evt.preventDefault();
     $('#codeCompare').html("");
     $('#codeCompare').html("Not a match, try again!");
-   }
+   } 
 }
 
  $('#attempt').on('click', checkCode);

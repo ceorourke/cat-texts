@@ -18,6 +18,7 @@ class User(db.Model):
     timezone = db.Column(db.String(100), nullable=False)    
     phone_number = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    is_verified = db.Column(db.Boolean, default=False, nullable=False)
 
     def __repr__(self):
         """Provide useful info when printed to console"""
