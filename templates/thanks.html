@@ -8,6 +8,15 @@
   <center>
     <h1>Thanks!</h1>
 
+  {% for msg in get_flashed_messages() %}
+    <div class="alert alert-info alert-dismissible" id="flash" role="alert">
+    <button type="button" class="close" data-dismiss="alert" 
+            aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    {{ msg }}
+    </div>
+  {% endfor %}
+
     <p>You're now signed up for Cat Texts!</p>
     <p>You'll receive an initial text shortly, try saying "hey" or "bye" 
        or anything else to get started.</p>
@@ -23,4 +32,6 @@
   </center>
 
 </div>
+
+<script src="/static/flashFade.js"></script>
 {% endblock %}

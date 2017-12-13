@@ -16,9 +16,9 @@
 
      <p>Please enter the code you were just texted. </p>
      <p> I don't want to text a random person about your cat!</p>
-     <!-- <div id="textCode" style="display: none;">{{ code }}</div>  -->
+     <div id="textCode" style="display: none;">{{ code }}</div> 
 
-     <div id="textCode" data-name="{{ code }}">{{ code }}</div> 
+     <!-- <div id="textCode" data-name="{{ code }}">{{ code }}</div>  -->
 
 
       <form method="POST" action="/verification">
@@ -39,20 +39,7 @@
   </div>
 </div>
 
-<script>
+<script src="/static/verification.js"></script>
 
-function checkCode(evt) {
-  var realCode = $('#textCode').data(); // get code from hidden div
-  var userCode = $('#text-code').val(); // get user input
-
-  if(realCode.name !== userCode) { // compare each 
-    evt.preventDefault();
-    $('#codeCompare').html("");
-    $('#codeCompare').html("Not a match, try again!");
-   } 
-}
-
- $('#attempt').on('click', checkCode);
-</script>
 
 {% endblock %}

@@ -195,7 +195,6 @@ def register_process():
         from_="+14138486585",
         # body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
         body=code)
-        # probably change this to send the code
         print(message.sid)
 
         # flash("Successfully registered " + email + "!")
