@@ -4,14 +4,18 @@ Cat Texts is a web app that uses the Twilio API to let you text your cat. It als
 
 ![Main](/static/img/main.png)
 
-![Text](/static/img/text2.png)
-
 ### Features
 
   - SMS verification at registration
   - Text back and forth with your cat
   - Receive daily reminders about dinner time
   - Update dinner time and cat info
+
+<p align="center">
+
+![Text](/static/img/text2.png)
+</p>
+
 
 ### Tech Stack
 - Python
