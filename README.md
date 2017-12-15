@@ -1,8 +1,8 @@
 # Cat Texts
 
-![Main](/static/img/main.png)
-
 Cat Texts is a web app that uses the Twilio API to let you text your cat. It also sends a daily text to remind you to feed your cat.
+
+![Main](/static/img/main.png)
 
 ![Text](/static/img/text2.png)
 
