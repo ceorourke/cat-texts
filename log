@@ -1,0 +1,23 @@
+Connected to DB.
+Traceback (most recent call last):
+  File "server.py", line 399, in <module>
+    app.run(port=5000, host='0.0.0.0')
+  File "/home/ubuntu/cat-facts-twilio/env/local/lib/python2.7/site-packages/flask/app.py", line 841, in run
+    run_simple(host, port, self, **options)
+  File "/home/ubuntu/cat-facts-twilio/env/local/lib/python2.7/site-packages/werkzeug/serving.py", line 799, in run_simple
+    inner()
+  File "/home/ubuntu/cat-facts-twilio/env/local/lib/python2.7/site-packages/werkzeug/serving.py", line 759, in inner
+    fd=fd)
+  File "/home/ubuntu/cat-facts-twilio/env/local/lib/python2.7/site-packages/werkzeug/serving.py", line 651, in make_server
+    passthrough_errors, ssl_context, fd=fd)
+  File "/home/ubuntu/cat-facts-twilio/env/local/lib/python2.7/site-packages/werkzeug/serving.py", line 562, in __init__
+    HTTPServer.__init__(self, (host, int(port)), handler)
+  File "/usr/lib/python2.7/SocketServer.py", line 417, in __init__
+    self.server_bind()
+  File "/usr/lib/python2.7/BaseHTTPServer.py", line 108, in server_bind
+    SocketServer.TCPServer.server_bind(self)
+  File "/usr/lib/python2.7/SocketServer.py", line 431, in server_bind
+    self.socket.bind(self.server_address)
+  File "/usr/lib/python2.7/socket.py", line 228, in meth
+    return getattr(self._sock,name)(*args)
+socket.error: [Errno 98] Address already in use
