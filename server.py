@@ -165,12 +165,7 @@ def register_process():
     # check if the email is in use
     if existing_email is None:
 
-        #generate a 6 digit verification code and text to user
-        code = ""
-        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        while len(code) < 6:
-            a_letter = random.choice(chars)
-            code += a_letter
+        code = generate_code()
 
         message = client.messages.create(
         to=phone, 
@@ -209,6 +204,26 @@ def register_process():
 
     return redirect("/")
 
+@app.route('/new_code', methods=["GET", "POST"])
+def send_new_code():
+    """Send user a new verification code"""
+
+    user = User.query.filter_by(user_id=session["user_id"]).first()
+
+    code = generate_code()
+
+    user.verification_code = code
+
+    db.session.commit()
+
+    message = client.messages.create(
+    to=user.phone_number, 
+    from_="+14138486585",
+    body=code)
+    print(message.sid)
+
+    return render_template("verification.html", user=user)
+
 @app.route('/update_phone', methods=["GET", "POST"])
 def update_phone():
     """Update user's phone number and re-send code"""
@@ -220,11 +235,7 @@ def update_phone():
     user = User.query.filter_by(user_id=session["user_id"]).first()
     user.phone_number = phone
 
-    code = ""
-    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    while len(code) < 6:
-        a_letter = random.choice(chars)
-        code += a_letter
+    code = generate_code()
 
     user.verification_code = code
 

@@ -3,6 +3,18 @@
 from datetime import datetime
 from pytz import timezone
 import pytz
+import random
+
+def generate_code():
+    """Generate a six digit verification code"""
+
+    code = ""
+    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    while len(code) < 6:
+        a_letter = random.choice(chars)
+        code += a_letter
+
+    return code
 
 def parse_time(time):
     """Parse hours and minutes from time"""
