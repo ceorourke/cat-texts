@@ -10,11 +10,12 @@
   <div class="row">
     <div class="col-xs-offset-2 col-xs-10 
                 col-sm-offset-4 col-sm-6
-                col-md-offset-4 col-md-6
-                col-lg-offset-3 col-lg-4">
+                col-md-offset-4 col-md-7
+                col-lg-offset-4 col-lg-5">
 
-     <p>Please enter the code you were just texted. </p>
-     <p> I don't want to text a random person about your cat!</p>
+     <p>Please enter the code you were just texted.</p>
+     <p> Code was sent to {{ user.phone_number }}.</p>
+     <!-- <p>I don't want to text a random person about your cat!</p> -->
 
       <form method="POST" action="/verification">
         <div class="form-group">
@@ -30,9 +31,59 @@
         </div>
         <input type="submit" id="attempt" value="Attempt!" class="btn btn-primary btn-block">
       </form>
+    </br>
+
+     <p>If you need a new code sent to you, click <span id="new-code" style="color:blue">here</span></p>
+     <div id="new-code-confirm" style="display: none;">
+      <form method="POST" action="/resend-code">
+        <input type="submit" id="attempt" value="Send me a new code" class="btn btn-primary btn-block">
+      </form>
+     </div>
+
+     <p>If the phone number is incorrect, click <span id="phone" style="color:blue">here</span> to update. You will also be sent a new code.</p>
+     <div id="phone-update" style="display: none;">
+      <form data-toggle="validator" role="form" method="POST" action="/update_phone">
+        <div class="form-group">
+          <label class="control-label" for="field-name">Phone Number</label>
+          <div class="input-group">
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>
+            </div>
+          <input id="phone" class="form-control" type="text" name="phone"
+                 pattern="^\d{3}-\d{3}-\d{4}$"
+                 placeholder="415-123-4567" required>
+          </div>
+        </div>
+        <input type="submit" id="update-phone" value="Submit" class="btn btn-primary btn-block">
+       </form>
+     </div>
+
     </div>
   </div>
 </div>
+
+<script>
+// function updatePhone() {
+//     $.get('/update_phone', {phone: $('#phone').val()}, );
+// }
+
+// $('#update-phone').click(updatePhone);
+
+
+function showPhoneUpdate(){
+  $('#phone-update').toggle();
+}
+
+$('#phone').click(showPhoneUpdate);
+
+////////////////////////////////////////////////////////////////////////////
+
+function showNewCode(){
+  $('#new-code-confirm').toggle();
+}
+$('#new-code').click(showNewCode);
+
+</script>
 
 <script src="/static/verification.js"></script>
 

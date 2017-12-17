@@ -92,7 +92,7 @@ def login():
     if (existing_email is not None and 
         bcrypt.checkpw(password, hashed) and 
         user.is_verified == False):
-        return render_template("verification.html") # they haven't been verified
+        return render_template("verification.html", user=user) # they haven't been verified
 
     if (existing_email is not None and 
         bcrypt.checkpw(password, hashed) and 
@@ -202,12 +202,41 @@ def register_process():
             # name="Job for " + current_user + ". Sending text at " + date.hour + ":" + date.minute,
             replace_existing=False)
 
-        return render_template("verification.html")
+        return render_template("verification.html", user=current_user)
 
     else:
         flash("Email already in use")
 
     return redirect("/")
+
+@app.route('/update_phone', methods=["GET", "POST"])
+def update_phone():
+    """Update user's phone number and re-send code"""
+
+    phone = request.form.get("phone")
+    country_code = '+1' # US country code
+    phone = ''.join(num for num in phone if num not in '-')
+    phone = country_code + phone
+    user = User.query.filter_by(user_id=session["user_id"]).first()
+    user.phone_number = phone
+
+    code = ""
+    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    while len(code) < 6:
+        a_letter = random.choice(chars)
+        code += a_letter
+
+    user.verification_code = code
+
+    db.session.commit()
+
+    message = client.messages.create(
+    to=phone, 
+    from_="+14138486585",
+    body=code)
+    print(message.sid)
+
+    return render_template("verification.html", user=user)
 
 @app.route('/check_verification_code.json')
 def check_verification_code():
