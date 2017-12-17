@@ -4,8 +4,7 @@
 
 {% block content %}
 
-    <h1>Verification</h1>
-
+<h1>Verification</h1>
 
 <div class="container-fluid">
   <div class="row">
@@ -16,10 +15,6 @@
 
      <p>Please enter the code you were just texted. </p>
      <p> I don't want to text a random person about your cat!</p>
-     <div id="textCode" data-name="{{ code }}" style="display: none;">{{ code }}</div> 
-
-     <!-- <div id="textCode" data-name="{{ code }}">{{ code }}</div>  -->
-
 
       <form method="POST" action="/verification">
         <div class="form-group">

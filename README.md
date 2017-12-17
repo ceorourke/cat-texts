@@ -13,6 +13,7 @@ Cat Texts is a web app that uses the Twilio API to let you text your cat. It als
 
 <p align="center">
 <img src="/static/img/text2.png">
+<!-- ![Text](/static/img/text2.png) -->
 </p>
 
 

@@ -159,8 +159,22 @@ def register_process():
 
     # check if the email is in use
     if existing_email is None:
+
+        #generate a 6 digit verification code and text to user
+        code = ""
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        while len(code) < 6:
+            a_letter = random.choice(chars)
+            code += a_letter
+
+        message = client.messages.create(
+        to=phone, 
+        from_="+14138486585",
+        body=code)
+        print(message.sid)
+
         new_user = User(email=email, password=password, phone_number=phone,
-                        timezone=timezone)
+                        timezone=timezone, verification_code=code)
         db.session.add(new_user)
         db.session.commit()
 
@@ -183,28 +197,25 @@ def register_process():
             # name="Job for " + current_user + ". Sending text at " + date.hour + ":" + date.minute,
             replace_existing=False)
 
-
-        code = ""
-        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        while len(code) < 6:
-            a_letter = random.choice(chars)
-            code += a_letter
-
-        message = client.messages.create(
-        to=phone, 
-        from_="+14138486585",
-        # body="Hi, it's " + name + ". I like " + snack + "! Feed me at " + dinner_time + "!")
-        body=code)
-        print(message.sid)
-
-        # flash("Successfully registered " + email + "!")
-        return render_template("verification.html", code=code)
-        # return render_template("thanks.html")
+        return render_template("verification.html")
 
     else:
         flash("Email already in use")
 
     return redirect("/")
+
+@app.route('/check_verification_code.json')
+def check_verification_code():
+    """Check if user has correctly entered verification code, send T/F back to page"""
+
+    code = request.args.get("code")
+    # user_id = session["user_id"]
+    user = User.query.filter_by(user_id=session["user_id"]).first()
+    if code == user.verification_code:
+        return "yes"
+    else:
+        return "no"
+
 
 @app.route('/verification', methods=["POST"])
 def verify_phone_number():
