@@ -1,4 +1,5 @@
 function replaceStatus(results) {
+  console.log(results)
   $('#emailStatus').html(results);
 }
 
@@ -6,9 +7,7 @@ function updateStatus() {
   $.get('/email_in_use', {email: $('#email').val()}, replaceStatus);
 }
 
-$('#email').on('keyup', updateStatus);
-
-
+$('#email').blur(updateStatus);
 
 $('#password').on('keyup', function () {
   if ($('#password').val().length < 6) {
@@ -32,3 +31,5 @@ $('#password, #confirm-password').on('keyup', function () {
     $('#confirmpw').addClass("has-error");
   } 
 });
+
+

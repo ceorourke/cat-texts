@@ -91,6 +91,11 @@ def login():
 
     if (existing_email is not None and 
         bcrypt.checkpw(password, hashed) and 
+        user.is_verified == False):
+        return render_template("verification.html") # they haven't been verified
+
+    if (existing_email is not None and 
+        bcrypt.checkpw(password, hashed) and 
         user.is_verified == True):
         # add user to session
         session["user_id"] = existing_email.user_id
@@ -243,10 +248,12 @@ def get_email_status():
     """Check if an email is in use or not"""
 
     email = request.args.get("email")
+    user = User.query.filter_by(email=email).first()
 
-    if User.query.filter_by(email=email).first():
-        return "Email is already in use"
-    return ""
+    if user:
+        return "Email is already in use. Go to login!"
+    else:
+        return ""
 
 
 @app.route("/main")
