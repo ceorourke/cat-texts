@@ -254,7 +254,6 @@ def check_verification_code():
     """Check if user has correctly entered verification code, send T/F back to page"""
 
     code = request.args.get("code")
-    # user_id = session["user_id"]
     user = User.query.filter_by(user_id=session["user_id"]).first()
     if code == user.verification_code:
         return "yes"
